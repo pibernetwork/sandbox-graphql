@@ -8,18 +8,21 @@ import express from 'express';
 import gql from 'graphql-tag';
 import http from 'http';
 import 'reflect-metadata';
+import { Resolvers } from './resolvers-types.js';
 
 dotenv.config();
 
 const typeDefs = gql.default`
   type Query {
-    hello: String
+    hello: String,
+    generated: String,
   }
 `;
 
-const resolvers = {
+const resolvers: Resolvers = {
   Query: {
-    hello: () => 'world'
+    hello: () => 'world',
+    generated: () => 'string'
   }
 };
 

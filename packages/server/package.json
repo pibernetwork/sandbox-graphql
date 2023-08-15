@@ -2,6 +2,7 @@
   "author": "",
   "dependencies": {
     "@apollo/server": "^4.9.1",
+    "@graphql-codegen/typescript-resolvers": "^4.0.1",
     "@tsconfig/node18": "^18.2.0",
     "@tsconfig/strictest": "^2.0.1",
     "@types/body-parser": "^1.19.2",
@@ -10,6 +11,7 @@
     "@typescript-eslint/eslint-plugin": "^6.4.0",
     "@vercel/node": "^2.15.10",
     "body-parser": "^1.20.2",
+    "class-validator": "^0.14.0",
     "consola": "^3.2.3",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
@@ -21,12 +23,15 @@
     "nodemon": "^3.0.1",
     "reflect-metadata": "^0.1.13",
     "ts-node": "^10.9.1",
-    "typescript": "^5.1.6"
+    "type-graphql": "1.2.0-rc.1"
   },
   "description": "",
   "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.0",
+    "@graphql-codegen/client-preset": "^4.1.0",
     "eslint": "^8.47.0",
-    "prettier": "^3.0.1"
+    "prettier": "^3.0.1",
+    "typescript": "^5.1.6"
   },
   "keywords": [],
   "license": "ISC",
@@ -36,7 +41,10 @@
     "check": "tsc --noEmit",
     "dev": "nodemon --esm src/dev.ts",
     "format": "prettier --write ./src",
-    "lint": "eslint --ignore-path .gitignore ./src && prettier --check ./src"
+    "generate": "graphql-codegen",
+    "lint": "eslint --ignore-path .gitignore ./src && prettier --check ./src",
+    "predev": "yarn generate",
+    "prestart": "yarn generate"
   },
   "type": "module",
   "version": "1.0.0"
