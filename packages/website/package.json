@@ -27,7 +27,8 @@
     "tslib": "^2.4.1",
     "typescript": "^5.1.6",
     "vite": "^4.4.2",
-    "vitest": "^0.32.2"
+    "vitest": "^0.32.2",
+    "houdini-svelte": "^1.2.8"
   },
   "name": "website",
   "private": true,
