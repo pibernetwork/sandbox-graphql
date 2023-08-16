@@ -1,0 +1,23 @@
+{
+  "author": "",
+  "dependencies": {
+    "@tsconfig/strictest": "^2.0.1",
+    "dataloader": "^2.2.2",
+    "dotenv": "^16.3.1",
+    "inversify": "^6.0.1",
+    "mongodb": "^5.7.0",
+    "reflect-metadata": "^0.1.13",
+    "typescript": "^5.1.6",
+    "zod": "^3.22.1"
+  },
+  "description": "",
+  "keywords": [],
+  "license": "ISC",
+  "main": "index.js",
+  "name": "library",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "type": "module",
+  "version": "1.0.0"
+}
