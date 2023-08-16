@@ -2,7 +2,7 @@ import DataLoader from "dataloader";
 import { injectable } from "inversify";
 import { Document, Filter, ObjectId, WithId } from "mongodb";
 import { z } from "zod";
-import { extractValidationMessages } from "../utils/validation";
+import { extractValidationMessages } from "../utils/validation.js";
 import {
   MongoDbRepositoryInterface,
   MongoDbServiceFindOptions,

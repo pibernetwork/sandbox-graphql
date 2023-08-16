@@ -3,8 +3,8 @@ import Repository from "../../generics/repository.js";
 import { User } from "./types.js";
 
 @injectable()
-class IncomeRepository extends Repository<User> {
+class UserRepository extends Repository<User> {
   override collectionName: string | null = "user";
 }
 
-export default IncomeRepository;
+export default UserRepository;
