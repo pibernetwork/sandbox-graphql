@@ -1,7 +1,7 @@
 import {
   MongoDbRepositoryInterface,
-  MongoDbServiceInterface,
-} from "../../generics/types";
+  MongoDbServiceInterface
+} from '../../generics/types';
 
 export interface User {
   _id?: string;

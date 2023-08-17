@@ -1,14 +1,14 @@
-import DataLoader from "dataloader";
-import { injectable } from "inversify";
-import { Document, Filter, ObjectId, WithId } from "mongodb";
-import { z } from "zod";
-import { extractValidationMessages } from "../utils/validation.js";
+import DataLoader from 'dataloader';
+import { injectable } from 'inversify';
+import { Document, Filter, ObjectId, WithId } from 'mongodb';
+import { z } from 'zod';
+import { extractValidationMessages } from '../utils/validation.js';
 import {
   MongoDbRepositoryInterface,
   MongoDbServiceFindOptions,
   MongoDbServiceInterface,
-  MongoDbServiceReturn,
-} from "./types.js";
+  MongoDbServiceReturn
+} from './types.js';
 
 @injectable()
 abstract class Service<T extends Document>
@@ -25,7 +25,7 @@ abstract class Service<T extends Document>
     options: MongoDbServiceFindOptions<T>
   ): Promise<WithId<T>[]> {
     console.log(ids, options);
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
 
   getRepository() {
@@ -33,7 +33,7 @@ abstract class Service<T extends Document>
   }
 
   getDocumentSchema(): z.ZodType<T> {
-    throw new Error("Calling a method from abstract class");
+    throw new Error('Calling a method from abstract class');
   }
 
   async deleteOne(documentId: string) {
@@ -45,14 +45,14 @@ abstract class Service<T extends Document>
   }
 
   async insertOne(documentToInsert: T): Promise<MongoDbServiceReturn<T>> {
-    console.log("insert one");
+    console.log('insert one');
     try {
       this.parseValidation(documentToInsert);
 
       const node = await this._repository.insertOne(documentToInsert);
       return {
         node,
-        errors: [],
+        errors: []
       };
     } catch (e) {
       if (e instanceof z.ZodError) {
@@ -60,7 +60,7 @@ abstract class Service<T extends Document>
 
         return {
           node: null,
-          errors,
+          errors
         };
       }
 
@@ -84,7 +84,7 @@ abstract class Service<T extends Document>
       );
       return {
         node,
-        errors: [],
+        errors: []
       };
     } catch (e) {
       if (e instanceof z.ZodError) {
@@ -92,7 +92,7 @@ abstract class Service<T extends Document>
 
         return {
           node: null,
-          errors,
+          errors
         };
       }
 
@@ -106,7 +106,7 @@ abstract class Service<T extends Document>
     const skip = (page - 1) * perPage;
     const limit = perPage;
 
-    const direction = sortDirection === "asc" ? 1 : -1;
+    const direction = sortDirection === 'asc' ? 1 : -1;
 
     const queryFilter: Filter<T> = {};
 
@@ -132,7 +132,7 @@ abstract class Service<T extends Document>
       limit: limit,
       sortBy: sortBy as keyof T,
       sortDirection: direction,
-      filter: queryFilter,
+      filter: queryFilter
     });
 
     return documents;
@@ -156,7 +156,7 @@ abstract class Service<T extends Document>
       );
 
       if (!documentsDb) {
-        throw new Error("Graphlql Error on map results to id");
+        throw new Error('Graphlql Error on map results to id');
       }
       return documentsDb;
     });

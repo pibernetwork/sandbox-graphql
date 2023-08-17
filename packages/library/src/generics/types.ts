@@ -1,4 +1,4 @@
-import { Document, Filter, ObjectId, WithId } from "mongodb";
+import { Document, Filter, ObjectId, WithId } from 'mongodb';
 
 // Repository
 export interface MongoDbRepositoryFindOptions<T> {
@@ -58,7 +58,7 @@ export interface MongoDbServiceInterface<T extends Document> {
 export interface MongoDbServiceFindOptions<T> {
   page: number;
   perPage: number;
-  sortDirection: "asc" | "desc";
+  sortDirection: 'asc' | 'desc';
   sortBy: keyof T;
   filter: { [key in keyof Partial<T>]: unknown };
 }

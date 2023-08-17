@@ -1,5 +1,5 @@
-import { z } from "zod";
-import { MongoDbFieldError } from "../generics/types.js";
+import { z } from 'zod';
+import { MongoDbFieldError } from '../generics/types.js';
 
 export function extractValidationMessages<T>(
   e: z.ZodError
@@ -10,7 +10,7 @@ export function extractValidationMessages<T>(
     const key = issue.path && (issue.path[0] as keyof T);
 
     if (!key) {
-      throw new Error("Missing field path in zod validation");
+      throw new Error('Missing field path in zod validation');
     }
     const message = issue.message;
     const type = issue.code;
@@ -18,7 +18,7 @@ export function extractValidationMessages<T>(
     return {
       key,
       type,
-      message,
+      message
     };
   });
 
