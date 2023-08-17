@@ -1,20 +1,31 @@
 {
-  "name": "cli",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
   "author": "",
-  "license": "ISC",
   "dependencies": {
+    "@tsconfig/node18": "^18.2.0",
+    "@tsconfig/strictest": "^2.0.1",
     "@types/node": "^20.5.0",
+    "reflect-metadata": "^0.1.13",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6"
   },
+  "description": "",
   "devDependencies": {
-    "@faker-js/faker": "^8.0.2"
-  }
+    "@faker-js/faker": "^8.0.2",
+    "@typescript-eslint/eslint-plugin": "^6.4.0",
+    "eslint": "^8.47.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "prettier": "^3.0.2"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "main": "index.js",
+  "name": "cli",
+  "scripts": {
+    "bin": "ts-node --esm src/index.ts",
+    "check": "tsc --noEmit",
+    "format": "prettier --write ./src",
+    "lint": "eslint --ignore-path .gitignore ./src && prettier --check ./src"
+  },
+  "version": "1.0.0"
 }
