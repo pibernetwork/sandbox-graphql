@@ -5,26 +5,12 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
-import gql from 'graphql-tag';
+
 import http from 'http';
 import 'reflect-metadata';
-import { Resolvers } from './resolvers-types.js';
+import { resolvers, typeDefs } from './graphql/index.js';
 
 dotenv.config();
-
-const typeDefs = gql.default`
-  type Query {
-    hello: String,
-    generated: String,
-  }
-`;
-
-const resolvers: Resolvers = {
-  Query: {
-    hello: () => 'world',
-    generated: () => 'string'
-  }
-};
 
 const { json } = bodyParser;
 

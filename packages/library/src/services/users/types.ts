@@ -1,11 +1,19 @@
+import { ObjectId } from 'mongodb';
 import {
   MongoDbRepositoryInterface,
   MongoDbServiceInterface
 } from '../../generics/types.js';
 
 export interface User {
-  _id?: string;
   email: string;
+}
+
+export interface UserDb extends User {
+  _id: ObjectId;
+}
+
+export interface UserJson extends User {
+  _id: string;
 }
 
 export type UserRepository = MongoDbRepositoryInterface<User>;
