@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import { injectable } from 'inversify';
 import { Collection, Document, MongoClient } from 'mongodb';
-import { Connection } from './types';
+import { Connection } from './types.js';
 
 dotenv.config();
 

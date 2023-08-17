@@ -1,9 +1,9 @@
 import { injectable } from 'inversify';
-import Repository from '../../generics/repository.js';
+import GenericRepository from '../../generics/repository.js';
 import { User } from './types.js';
 
 @injectable()
-class UserRepository extends Repository<User> {
+class UserRepository extends GenericRepository<User> {
   override collectionName: string | null = 'user';
 }
 
