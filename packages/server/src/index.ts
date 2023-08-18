@@ -9,6 +9,7 @@ import express from 'express';
 import http from 'http';
 import 'reflect-metadata';
 import { resolvers, typeDefs } from './graphql/index.js';
+import { GraphQLContext } from './graphql/types.js';
 
 dotenv.config();
 
@@ -28,6 +29,13 @@ const server = new ApolloServer({
 
 await server.start();
 
+import { container } from 'library';
+import DataServices from 'library/src/containers/dataServices.js';
+
+const dataServices = new DataServices(container);
+
+await dataServices.connection.init();
+
 app.get('/', (_, res) => {
   res.status(301).redirect('/graphql');
 });
@@ -36,7 +44,15 @@ app.use(
   '/graphql',
   cors<cors.CorsRequest>(),
   json(),
-  expressMiddleware(server)
+  expressMiddleware(server, {
+    context: async (): Promise<GraphQLContext> => {
+      const services = dataServices.getAll();
+      return {
+        user: null,
+        ...services
+      };
+    }
+  })
 );
 
 export default httpServer;

@@ -5,7 +5,8 @@ const config: CodegenConfig = {
   generates: {
     './src/resolvers-types.ts': {
       config: {
-        useIndexSignature: true
+        useIndexSignature: true,
+        contextType: './graphql/types.js#GraphQLContext'
       },
       plugins: ['typescript', 'typescript-resolvers']
     }

@@ -161,6 +161,9 @@ importers:
       graphql-tag:
         specifier: ^2.12.6
         version: 2.12.6(graphql@16.8.0)
+      library:
+        specifier: workspace:*
+        version: link:../library
       nodemon:
         specifier: ^3.0.1
         version: 3.0.1
