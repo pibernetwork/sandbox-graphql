@@ -16,10 +16,12 @@ export interface MongoDbRepositoryInterface<T extends Document> {
     documentToUpdate: T | WithId<T>
   ): Promise<WithId<T>>;
   insertOne(documentToInsert: T): Promise<WithId<T>>;
+  insertMany(documents: T[]): Promise<ObjectId[]>;
   find(options: MongoDbRepositoryFindOptions<T>): Promise<WithId<T>[]>;
   findOne(documentId: string): Promise<WithId<T> | null>;
   findAll(): Promise<WithId<T>[]>;
   queryAllByIds(ids: readonly ObjectId[]): Promise<WithId<T>[]>;
+  findWithFilter(filter: Filter<T>): Promise<WithId<T>[]>;
 }
 
 // Services
@@ -41,6 +43,7 @@ export type MongoDbServiceReturn<T> = { node: T | WithId<T> | null } & {
 export interface MongoDbServiceInterface<T extends Document> {
   deleteOne(documentId: string): Promise<boolean>;
   insertOne(documentToInsert: T): Promise<MongoDbServiceReturn<T>>;
+  insertMany(documents: T[]): Promise<string[]>;
   updateOne(
     documentId: string,
     documentToUpdate: T | WithId<T>

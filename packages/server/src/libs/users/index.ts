@@ -5,9 +5,10 @@ import gql from 'graphql-tag';
 export const typeDefs = gql.default`
 
   type User {
-    _id: String
+    _id: String!
     email: String
     birthday: String
+    profiles: [Profile]!
   }
 
   type Query {
@@ -17,16 +18,23 @@ export const typeDefs = gql.default`
 `;
 
 export const resolvers: Resolvers = {
+  User: {
+    profiles: async (user, __, ctx) => {
+      const { _id } = user;
+
+      const profiles = await ctx.profiles.findByReference(
+        'userId',
+        _id.toString()
+      );
+
+      return profiles;
+    }
+  },
   Query: {
     users: async (_, __, ctx) => {
       const usersDb = await ctx.users.findAll();
 
-      return usersDb.map((user) => {
-        return {
-          ...user,
-          _id: user._id.toString()
-        };
-      });
+      return usersDb;
     },
     user: async (_, args, ctx) => {
       const { _id } = args;
@@ -37,10 +45,7 @@ export const resolvers: Resolvers = {
         throw new Error('Missing user');
       }
 
-      return {
-        ...user,
-        _id: user._id.toString()
-      };
+      return user;
     }
   }
 };

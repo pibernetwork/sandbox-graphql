@@ -3,10 +3,10 @@ import { Resolvers } from '../../resolvers-types.js';
 import gql from 'graphql-tag';
 
 export const typeDefs = gql.default`
-
   type Profile {
     _id: String
     user: User
+    birthday: String
   }
 
   type Query {
@@ -16,13 +16,34 @@ export const typeDefs = gql.default`
 
 export const resolvers: Resolvers = {
   Profile: {
-    user: () => {
-      return { email: 'haha@gmail.com', birthday: '1234' };
+    user: async (profile, __, ctx) => {
+      const { userId } = profile;
+
+      if (!userId) {
+        throw new Error('Missing user ID');
+      }
+
+      const user = await ctx.users.findOne(userId.toString());
+
+      if (!user) {
+        throw new Error('User not found');
+      }
+
+      return user;
     }
   },
   Query: {
-    profiles: () => {
-      return [];
+    profiles: async (_, __, ctx) => {
+      console.log('profiles');
+      const profilesDb = await ctx.profiles.findAll();
+
+      return profilesDb.map((profile) => {
+        return {
+          ...profile,
+          userId: profile.userId.toString(),
+          _id: profile._id.toString()
+        };
+      });
     }
   }
 };

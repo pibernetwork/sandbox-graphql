@@ -44,6 +44,11 @@ abstract class Service<T extends Document>
     return this._repository.findOne(documentId);
   }
 
+  async insertMany(documents: T[]): Promise<string[]> {
+    const ids = await this._repository.insertMany(documents);
+    return ids.map((id) => id.toString());
+  }
+
   async insertOne(documentToInsert: T): Promise<MongoDbServiceReturn<T>> {
     console.log('insert one');
     try {
@@ -98,6 +103,12 @@ abstract class Service<T extends Document>
 
       throw e;
     }
+  }
+
+  async findByReference(refKey: string, refId: string) {
+    return this._repository.findWithFilter({
+      [refKey]: { $eq: refId }
+    } as unknown as Filter<T>);
   }
 
   async find(options: MongoDbServiceFindOptions<T>) {

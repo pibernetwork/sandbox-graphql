@@ -26,7 +26,8 @@
     "nodemon": "^3.0.1",
     "reflect-metadata": "^0.1.13",
     "ts-node": "^10.9.1",
-    "type-graphql": "1.2.0-rc.1"
+    "vitest": "^0.34.2",
+    "vitest-mock-extended": "^1.2.0"
   },
   "description": "",
   "devDependencies": {
@@ -47,7 +48,8 @@
     "generate": "graphql-codegen",
     "lint": "eslint --ignore-path .gitignore ./src && prettier --check ./src",
     "predev": "yarn generate",
-    "prestart": "yarn generate"
+    "prestart": "yarn generate",
+    "test": "vitest"
   },
   "type": "module",
   "version": "1.0.0"

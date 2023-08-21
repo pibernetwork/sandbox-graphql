@@ -13,13 +13,24 @@ export function getUsers(length: number): User[] {
   });
 }
 
-export function getProfiles(length: number): Profile[] {
+function getRandomId(items: string[]) {
+  const id = items[Math.floor(Math.random() * items.length)];
+  if (!id) {
+    throw new Error('Random ID not found');
+  }
+
+  return id;
+}
+
+export function getProfiles(length: number, usersIds: string[]): Profile[] {
   return Array.from({
     length
   }).map(() => {
+    const userId = getRandomId(usersIds);
+
     const user: Profile = {
       birthday: faker.date.past().toISOString(),
-      userId: faker.lorem.words(5)
+      userId
     };
 
     return user;

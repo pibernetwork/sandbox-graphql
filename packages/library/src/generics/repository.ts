@@ -85,6 +85,22 @@ abstract class GenericRepository<T extends Document>
     } as unknown as WithId<T>;
   }
 
+  async insertMany(documents: T[]): Promise<ObjectId[]> {
+    const collection = await this.getCollection(this.collectionName);
+
+    const document = await collection.insertMany(
+      documents as unknown as OptionalUnlessRequiredId<T>[]
+    );
+
+    if (!document.acknowledged) {
+      throw new Error('Error in insert many');
+    }
+
+    const ids = Object.values(document.insertedIds);
+
+    return ids;
+  }
+
   async find(options: MongoDbRepositoryFindOptions<T>): Promise<WithId<T>[]> {
     const collection = await this.getCollection(this.collectionName);
 
@@ -96,6 +112,12 @@ abstract class GenericRepository<T extends Document>
       .limit(limit)
       .sort({ [sortBy]: sortDirection })
       .toArray();
+  }
+
+  async findWithFilter(filter: Filter<T>): Promise<WithId<T>[]> {
+    const collection = await this.getCollection(this.collectionName);
+
+    return collection.find(filter).toArray();
   }
 
   async findAll(): Promise<WithId<T>[]> {

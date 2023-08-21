@@ -22,30 +22,24 @@ program
 
 const DEFAULT_LOAD = 500;
 
-program.command('user:load').action(async () => {
+program.command('load').action(async () => {
   const users = getUsers(DEFAULT_LOAD);
-  for (const user of users) {
-    await services.users.insertOne(user);
-  }
+
+  const usersIds = await services.users.insertMany(users);
+
+  const profiles = getProfiles(DEFAULT_LOAD, usersIds);
+
+  await services.profiles.insertMany(profiles);
+  // load users
+  // load profiles
 });
 
-program.command('user:list').action(async () => {
-  const all = await services.users.findAll();
-
-  console.table(all);
+program.command('list:users').action(async () => {
+  console.table(await services.users.findAll());
 });
 
-program.command('profiles:load').action(async () => {
-  const profiles = getProfiles(DEFAULT_LOAD);
-  for (const item of profiles) {
-    await services.profiles.insertOne(item);
-  }
-});
-
-program.command('profiles:list').action(async () => {
-  const all = await services.profiles.findAll();
-
-  console.table(all);
+program.command('list:profiles').action(async () => {
+  console.table(await services.profiles.findAll());
 });
 
 program.parse();
