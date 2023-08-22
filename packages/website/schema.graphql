@@ -1,4 +1,28 @@
+type Mutation {
+  addProfile(birthday: String!, userId: String!, weight: Float!): Profile
+  delProfile(_id: String!): Boolean!
+  editProfile(_id: String!, birthday: String!, userId: String!, weight: Float!): Profile
+}
+
+type Profile {
+  _id: String
+  birthday: String
+  user: User
+  weight: Float
+}
+
 type Query {
   generated: String
   hello: String
+  profile(_id: String!): Profile
+  profiles: [Profile]!
+  user(_id: String!): User!
+  users: [User]
+}
+
+type User {
+  _id: String!
+  birthday: String
+  email: String
+  profiles: [Profile]!
 }

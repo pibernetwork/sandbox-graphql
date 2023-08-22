@@ -12,7 +12,7 @@ export const typeDefs = gql.default`
   }
 
   type Query {
-    profiles: [Profile]
+    profiles: [Profile]!
     profile(_id: String!): Profile
   }
 
