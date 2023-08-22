@@ -4,7 +4,7 @@ import 'reflect-metadata';
 import { ObjectId } from 'mongodb';
 import { expect, test } from 'vitest';
 import { mock } from 'vitest-mock-extended';
-import { ProfileDb } from '../../index.js';
+import { ProfileWithId } from '../../index.js';
 import ProfileRepository from './repository.js';
 import ProfileService from './service.js';
 
@@ -15,7 +15,7 @@ test('Service - Find one', async () => {
 
   const service = new ProfileService(profileRepository);
 
-  const expected: ProfileDb = {
+  const expected: ProfileWithId = {
     _id: new ObjectId('123123123123'),
     userId: new ObjectId('123123123123'),
     birthday: '123123123'

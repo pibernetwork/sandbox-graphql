@@ -29,7 +29,9 @@ export function getProfiles(length: number, usersIds: ObjectId[]): Profile[] {
     const userId = getRandomId(usersIds);
 
     const user: Profile = {
-      birthday: faker.date.past().toISOString(),
+      birthday: faker.date
+        .between({ from: '1942-01-01', to: '2004-01-01' })
+        .toISOString(),
       userId
     };
 

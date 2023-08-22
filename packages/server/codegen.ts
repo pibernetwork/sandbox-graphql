@@ -8,8 +8,8 @@ const config: CodegenConfig = {
         useIndexSignature: true,
         contextType: './graphql/types.js#GraphQLContext',
         mappers: {
-          Profile: 'library#Profile as ProfileItem',
-          User: 'library#UserDb'
+          Profile: 'library#ProfileWithId',
+          User: 'library#UserWithId'
         }
       },
       plugins: ['typescript', 'typescript-resolvers']

@@ -1,4 +1,4 @@
-import { ObjectId } from 'mongodb';
+import { WithId } from 'mongodb';
 import {
   MongoDbRepositoryInterface,
   MongoDbServiceInterface
@@ -8,9 +8,7 @@ export interface User {
   email: string;
 }
 
-export interface UserDb extends User {
-  _id: ObjectId;
-}
+export type UserWithId = WithId<User>;
 
 export type UserRepository = MongoDbRepositoryInterface<User>;
 

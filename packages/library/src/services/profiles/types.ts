@@ -1,4 +1,4 @@
-import { ObjectId } from 'mongodb';
+import { ObjectId, WithId } from 'mongodb';
 import {
   MongoDbRepositoryInterface,
   MongoDbServiceInterface
@@ -9,15 +9,7 @@ export interface Profile {
   birthday: string;
 }
 
-export interface ProfileDb extends Omit<Profile, 'userId'> {
-  _id: ObjectId;
-  userId: ObjectId;
-}
-
-export interface ProfileJson extends Omit<Profile, 'userId'> {
-  _id: string;
-  userId: string;
-}
+export type ProfileWithId = WithId<Profile>;
 
 export type ProfileRepository = MongoDbRepositoryInterface<Profile>;
 
