@@ -158,18 +158,21 @@ test('Mutation - Add Profile - OK', async () => {
   );
 
   const GET_QUERY = gql.default`
-    mutation {
-      addProfile(userId: "123123123123", birthday: "1950-06-08T03:25:44.443Z", weight: 86) {
-
+    mutation AddProfile($userId: String!, $birthday: String!, $weight: Float!) {
+      addProfile(userId: $userId, birthday: $birthday, weight: $weight) {
          _id
-
       }
     }
   `;
 
   const response = await server.executeOperation(
     {
-      query: GET_QUERY
+      query: GET_QUERY,
+      variables: {
+        userId: '123123123123',
+        birthday: '1950-06-08T03:25:44.443Z',
+        weight: 86
+      }
     },
     {
       contextValue
@@ -200,8 +203,8 @@ test('Mutation - Edit Profile - OK', async () => {
   };
 
   const GET_QUERY = gql.default`
-  mutation {
-    editProfile(_id: "123123123123", userId: "123123123123", birthday: "1950-06-08T03:25:44.443Z", weight: 86) {
+  mutation EditProfile($_id: String!, $userId: String!, $birthday: String!, $weight: Float!) {
+    editProfile(_id: $_id, userId: $userId, birthday: $birthday, weight: $weight) {
        _id
     }
   }
@@ -220,7 +223,13 @@ test('Mutation - Edit Profile - OK', async () => {
 
   const response = await server.executeOperation(
     {
-      query: GET_QUERY
+      query: GET_QUERY,
+      variables: {
+        _id: '123123123123',
+        userId: '123123123123',
+        birthday: '1950-06-08T03:25:44.443Z',
+        weight: 86
+      }
     },
     {
       contextValue
@@ -251,8 +260,8 @@ test('Mutation - Delete Profile - OK', async () => {
   };
 
   const GET_QUERY = gql.default`
-  mutation {
-    delProfile(_id: "123123123123")
+  mutation DelProfile($_id: String!) {
+    delProfile(_id: $_id)
   }
 `;
 
@@ -260,7 +269,8 @@ test('Mutation - Delete Profile - OK', async () => {
 
   const response = await server.executeOperation(
     {
-      query: GET_QUERY
+      query: GET_QUERY,
+      variables: { _id: '123123123123' }
     },
     {
       contextValue
