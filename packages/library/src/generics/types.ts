@@ -49,7 +49,7 @@ export interface MongoDbServiceInterface<T extends Document> {
   insertMany(documents: T[]): Promise<ObjectId[]>;
   updateOne(
     documentId: string,
-    documentToUpdate: T | WithId<T>
+    documentToUpdate: Partial<T | WithId<T>>
   ): Promise<MongoDbServiceReturn<T>>;
   findAll(): Promise<WithId<T>[]>;
   findAllByIds(ids: readonly ObjectId[]): Promise<WithId<T>[]>;

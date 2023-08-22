@@ -115,13 +115,13 @@ abstract class Service<T extends Document>
 
   async updateOne(
     documentId: string,
-    documentToUpdate: T
+    documentToUpdate: Partial<T>
   ): Promise<MongoDbServiceReturn<T>> {
     try {
       this.parseValidation(documentToUpdate);
       const node = await this._repository.updateOne(
         documentId,
-        documentToUpdate
+        documentToUpdate as T
       );
       return {
         node,

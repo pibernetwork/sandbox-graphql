@@ -112,7 +112,7 @@ abstract class GenericRepository<T extends Document>
     const currentMessage = await this.findOne(documentId);
 
     if (!currentMessage) {
-      throw new Error('Message not found');
+      throw new Error('Document not found');
     }
 
     const newMessage: WithId<T> = { ...currentMessage, ...documentToUpdate };
@@ -132,7 +132,7 @@ abstract class GenericRepository<T extends Document>
     const currentMessage = await this.findOne(documentId);
 
     if (!currentMessage) {
-      throw new Error('Message not found');
+      throw new Error('Document not found');
     }
 
     const collection = await this.getCollection(this.collectionName);

@@ -21,10 +21,25 @@ export type Scalars = {
 export type Mutation = {
   __typename?: 'Mutation';
   addProfile?: Maybe<Profile>;
+  delProfile: Scalars['Boolean']['output'];
+  editProfile?: Maybe<Profile>;
 };
 
 
 export type MutationAddProfileArgs = {
+  birthday: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
+  weight: Scalars['Float']['input'];
+};
+
+
+export type MutationDelProfileArgs = {
+  _id: Scalars['String']['input'];
+};
+
+
+export type MutationEditProfileArgs = {
+  _id: Scalars['String']['input'];
   birthday: Scalars['String']['input'];
   userId: Scalars['String']['input'];
   weight: Scalars['Float']['input'];
@@ -160,6 +175,8 @@ export type ResolversParentTypes = ResolversObject<{
 
 export type MutationResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   addProfile?: Resolver<Maybe<ResolversTypes['Profile']>, ParentType, ContextType, RequireFields<MutationAddProfileArgs, 'birthday' | 'userId' | 'weight'>>;
+  delProfile?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDelProfileArgs, '_id'>>;
+  editProfile?: Resolver<Maybe<ResolversTypes['Profile']>, ParentType, ContextType, RequireFields<MutationEditProfileArgs, '_id' | 'birthday' | 'userId' | 'weight'>>;
 }>;
 
 export type ProfileResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Profile'] = ResolversParentTypes['Profile']> = ResolversObject<{

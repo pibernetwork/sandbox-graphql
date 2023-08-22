@@ -18,6 +18,8 @@ export const typeDefs = gql.default`
 
   type Mutation {
     addProfile(userId: String!, birthday: String!, weight: Float!): Profile
+    editProfile(_id: String!, userId: String!, birthday: String!, weight: Float!): Profile
+    delProfile(_id: String!): Boolean!
   }
 `;
 
@@ -78,6 +80,30 @@ export const resolvers: Resolvers = {
         throw new Error('Failed to add profile');
       }
       return profile.node;
+    },
+    editProfile: async (_, args, ctx) => {
+      if (!args.userId) {
+        throw new Error('Missing user id');
+      }
+
+      const { _id, ...profileArgs } = args;
+
+      const profileItem: Partial<Profile> = {
+        ...profileArgs,
+        userId: new ObjectId(profileArgs.userId)
+      };
+      const profile = await ctx.profiles.updateOne(_id, profileItem);
+
+      if (!profile.node) {
+        throw new Error('Failed to edit profile');
+      }
+      return profile.node;
+    },
+    delProfile: async (_, args, ctx) => {
+      const { _id } = args;
+
+      const profile = await ctx.profiles.deleteOne(_id);
+      return profile;
     }
   }
 };
