@@ -34,7 +34,7 @@ export type MongoDbFieldError<T> = {
   type: string;
 };
 
-export type MongoDbServiceReturn<T> = { node: T | WithId<T> | null } & {
+export type MongoDbServiceReturn<T> = { node: WithId<T> | null } & {
   errors: MongoDbFieldError<T>[];
 };
 

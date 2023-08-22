@@ -84,7 +84,7 @@ abstract class GenericRepository<T extends Document>
       documentToInsert as unknown as OptionalUnlessRequiredId<T>
     );
 
-    const id = document.insertedId.toString();
+    const id = document.insertedId;
 
     return {
       ...documentToInsert,

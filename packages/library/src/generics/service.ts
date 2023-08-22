@@ -81,11 +81,13 @@ abstract class Service<T extends Document>
   }
 
   // insert
-  async insertOne(documentToInsert: T): Promise<MongoDbServiceReturn<T>> {
+  async insertOne(
+    documentToInsert: Partial<T>
+  ): Promise<MongoDbServiceReturn<T>> {
     try {
       this.parseValidation(documentToInsert);
 
-      const node = await this._repository.insertOne(documentToInsert);
+      const node = await this._repository.insertOne(documentToInsert as T);
       return {
         node,
         errors: []
@@ -155,7 +157,7 @@ abstract class Service<T extends Document>
     throw new Error('Calling a method from abstract class');
   }
 
-  parseValidation(documentToValidate: T) {
+  parseValidation(documentToValidate: Partial<T>) {
     this.getDocumentSchema().parse(documentToValidate);
   }
 

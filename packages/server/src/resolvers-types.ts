@@ -18,11 +18,24 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+export type Mutation = {
+  __typename?: 'Mutation';
+  addProfile?: Maybe<Profile>;
+};
+
+
+export type MutationAddProfileArgs = {
+  birthday: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
+  weight: Scalars['Float']['input'];
+};
+
 export type Profile = {
   __typename?: 'Profile';
   _id?: Maybe<Scalars['String']['output']>;
   birthday?: Maybe<Scalars['String']['output']>;
   user?: Maybe<User>;
+  weight?: Maybe<Scalars['Float']['output']>;
 };
 
 export type Query = {
@@ -126,6 +139,8 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  Float: ResolverTypeWrapper<Scalars['Float']['output']>;
+  Mutation: ResolverTypeWrapper<{}>;
   Profile: ResolverTypeWrapper<ProfileWithId>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
@@ -135,16 +150,23 @@ export type ResolversTypes = ResolversObject<{
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars['Boolean']['output'];
+  Float: Scalars['Float']['output'];
+  Mutation: {};
   Profile: ProfileWithId;
   Query: {};
   String: Scalars['String']['output'];
   User: UserWithId;
 }>;
 
+export type MutationResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
+  addProfile?: Resolver<Maybe<ResolversTypes['Profile']>, ParentType, ContextType, RequireFields<MutationAddProfileArgs, 'birthday' | 'userId' | 'weight'>>;
+}>;
+
 export type ProfileResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Profile'] = ResolversParentTypes['Profile']> = ResolversObject<{
   _id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   birthday?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  weight?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -166,6 +188,7 @@ export type UserResolvers<ContextType = GraphQLContext, ParentType extends Resol
 }>;
 
 export type Resolvers<ContextType = GraphQLContext> = ResolversObject<{
+  Mutation?: MutationResolvers<ContextType>;
   Profile?: ProfileResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   User?: UserResolvers<ContextType>;

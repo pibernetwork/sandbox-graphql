@@ -7,6 +7,7 @@ import {
 export interface Profile {
   userId: ObjectId;
   birthday: string;
+  weight: number;
 }
 
 export type ProfileWithId = WithId<Profile>;

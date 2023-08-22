@@ -16,7 +16,8 @@ class ProfileService extends GenericService<Profile> {
   override getDocumentSchema(): z.ZodType<Profile, z.ZodTypeDef, Profile> {
     return z.object({
       userId: z.instanceof(ObjectId),
-      birthday: z.string().nonempty()
+      birthday: z.string().nonempty(),
+      weight: z.number().nonnegative()
     }) satisfies z.ZodType<Profile>;
   }
 }

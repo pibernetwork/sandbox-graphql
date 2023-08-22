@@ -16,7 +16,8 @@ test('Repository - Find one', async () => {
 
   const expected: Profile = {
     userId: new ObjectId('123123123123'),
-    birthday: '123123123'
+    birthday: '123123123',
+    weight: 85
   };
 
   collection.findOne.mockResolvedValue(expected);
@@ -28,4 +29,32 @@ test('Repository - Find one', async () => {
   expect(findOne).toEqual(expected);
 
   expect(collection.findOne).toBeCalled();
+});
+
+test('Repository - Insert one', async () => {
+  const connectionMock = mock<Connection>();
+
+  const collection = mock<Collection>();
+
+  connectionMock.getCollection.mockResolvedValue(collection);
+
+  const profileMock: Profile = {
+    userId: new ObjectId('123123123123'),
+    birthday: '123123123',
+    weight: 85
+  };
+
+  collection.insertOne.mockResolvedValue({
+    insertedId: new ObjectId('313233313233313233313233'),
+    acknowledged: true
+  });
+
+  const profile = new ProfileRepository(connectionMock);
+
+  const insertOne = await profile.insertOne(profileMock);
+
+  expect(insertOne._id.toString()).toEqual(
+    new Object('313233313233313233313233').toString()
+  );
+  expect(insertOne.weight).toEqual(profileMock.weight);
 });

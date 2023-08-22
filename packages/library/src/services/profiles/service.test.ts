@@ -18,7 +18,8 @@ test('Service - Find one', async () => {
   const expected: ProfileWithId = {
     _id: new ObjectId('123123123123'),
     userId: new ObjectId('123123123123'),
-    birthday: '123123123'
+    birthday: '123123123',
+    weight: 95
   };
 
   profileRepository.findOne.mockResolvedValue(expected);
@@ -28,4 +29,44 @@ test('Service - Find one', async () => {
   expect(findOne).toEqual(expected);
 
   expect(profileRepository.findOne).toBeCalled();
+});
+
+test('Service - Insert one - OK', async () => {
+  const profileRepository = mock<ProfileRepository>();
+
+  // const profileService = mock<ProfileService>();
+
+  const service = new ProfileService(profileRepository);
+
+  const expected: ProfileWithId = {
+    _id: new ObjectId('123123123123'),
+    userId: new ObjectId('123123123123'),
+    birthday: '123123123',
+    weight: 95
+  };
+  profileRepository.insertOne.mockResolvedValue(expected);
+
+  const node = await service.insertOne(expected);
+
+  expect(node.errors).toEqual([]);
+  expect(node.node).toEqual(expected);
+
+  expect(profileRepository.insertOne).toBeCalled();
+});
+
+test('Service - Insert One - Errors', async () => {
+  const profileRepository = mock<ProfileRepository>();
+
+  // const profileService = mock<ProfileService>();
+
+  const service = new ProfileService(profileRepository);
+  // @ts-expect-error Incomplete Profile
+  const expected: ProfileWithId = {};
+
+  profileRepository.insertOne.mockResolvedValue(expected);
+
+  const node = await service.insertOne(expected);
+
+  expect(node.node).toBeNull();
+  expect(node.errors.length).toEqual(3);
 });
