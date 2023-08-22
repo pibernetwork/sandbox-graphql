@@ -90,8 +90,8 @@ test('Query Profile', async () => {
   users.findOne.mockReturnValue(Promise.resolve(userMock));
 
   const GET_QUERY = gql.default`
-    query {
-      profile(_id: "123123123123") {
+    query GetProfiles($_id: String!) {
+      profile(_id: $_id) {
         _id
         birthday
         weight
@@ -105,7 +105,8 @@ test('Query Profile', async () => {
 
   const response = await server.executeOperation(
     {
-      query: GET_QUERY
+      query: GET_QUERY,
+      variables: { _id: '123123123123' }
     },
     {
       contextValue

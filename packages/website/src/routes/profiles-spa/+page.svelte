@@ -1,4 +1,5 @@
 <script lang="ts">
+  import ProfileView from '$lib/components/Profile/ProfileView.svelte';
   import {
     Heading,
     Table,
@@ -26,6 +27,9 @@
     <div>View</div>
     <div>Create</div>
     <div>Edit</div>
+    {#if selected}
+      <ProfileView _id={selected} />
+    {/if}
   </div>
 
   <div class="col-span-9">
