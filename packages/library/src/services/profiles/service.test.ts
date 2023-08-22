@@ -70,3 +70,61 @@ test('Service - Insert One - Errors', async () => {
   expect(node.node).toBeNull();
   expect(node.errors.length).toEqual(3);
 });
+
+test('Service - Update one - OK', async () => {
+  const profileRepository = mock<ProfileRepository>();
+
+  const profileId = '123412341234';
+
+  // const profileService = mock<ProfileService>();
+
+  const service = new ProfileService(profileRepository);
+
+  const expected: ProfileWithId = {
+    _id: new ObjectId('123123123123'),
+    userId: new ObjectId('123123123123'),
+    birthday: '123123123',
+    weight: 95
+  };
+  profileRepository.updateOne.mockResolvedValue(expected);
+
+  const node = await service.updateOne(profileId, expected);
+
+  expect(node.errors).toEqual([]);
+  expect(node.node?._id.toString()).toEqual(expected._id.toString());
+
+  expect(profileRepository.updateOne).toBeCalled();
+});
+
+test('Service - Update One - Errors', async () => {
+  const profileRepository = mock<ProfileRepository>();
+
+  // const profileService = mock<ProfileService>();
+
+  const profileId = '123412341234';
+
+  const service = new ProfileService(profileRepository);
+  // @ts-expect-error Incomplete Profile
+  const expected: ProfileWithId = {};
+
+  profileRepository.insertOne.mockResolvedValue(expected);
+
+  const node = await service.updateOne(profileId, expected);
+
+  expect(node.node).toBeNull();
+  expect(node.errors.length).toEqual(3);
+});
+
+test('Service - Delete One', async () => {
+  const profileRepository = mock<ProfileRepository>();
+
+  const service = new ProfileService(profileRepository);
+
+  const profileId = '123412341234';
+
+  profileRepository.deleteOne.mockResolvedValue(true);
+
+  const node = await service.deleteOne(profileId);
+
+  expect(node).toBeTruthy();
+});
