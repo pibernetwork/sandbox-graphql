@@ -11,6 +11,7 @@ export const typeDefs = gql.default`
 
   type Query {
     profiles: [Profile]
+    profile(_id: String): Profile
   }
 `;
 
@@ -34,7 +35,6 @@ export const resolvers: Resolvers = {
   },
   Query: {
     profiles: async (_, __, ctx) => {
-      console.log('profiles');
       const profilesDb = await ctx.profiles.findAll();
 
       return profilesDb.map((profile) => {

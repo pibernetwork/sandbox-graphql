@@ -1,9 +1,11 @@
 // sum.test.js
+import 'reflect-metadata';
+
 import { ApolloServer } from '@apollo/server';
 import gql from 'graphql-tag';
+import { Connection, ObjectId } from 'library';
 import ProfileService from 'library/src/services/profiles/service.js';
 import UserService from 'library/src/services/users/service.js';
-import { Connection } from 'library/src/utils/types.js';
 import { assert, expect, test } from 'vitest';
 import { mock } from 'vitest-mock-extended';
 import { resolvers, typeDefs } from './../../graphql/index.js';
@@ -74,12 +76,16 @@ test('Query Profile', async () => {
   };
 
   profiles.findOne.mockReturnValue(
-    Promise.resolve({ _id: '1234', birthday: '12345', userId: '4321' })
+    Promise.resolve({
+      _id: new ObjectId('123123123123'),
+      birthday: '12345',
+      userId: '4321'
+    })
   );
 
   const GET_QUERY = gql.default`
     query {
-      profile(_id: "1234") {
+      profile(_id: "123123123123") {
         _id
       }
     }

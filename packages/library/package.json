@@ -27,5 +27,8 @@
     "test": "vitest run"
   },
   "type": "module",
-  "version": "1.0.0"
+  "version": "1.0.0",
+  "devDependencies": {
+    "vitest-mock-extended": "^1.2.0"
+  }
 }

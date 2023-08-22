@@ -50,7 +50,6 @@ abstract class Service<T extends Document>
   }
 
   async insertOne(documentToInsert: T): Promise<MongoDbServiceReturn<T>> {
-    console.log('insert one');
     try {
       this.parseValidation(documentToInsert);
 
