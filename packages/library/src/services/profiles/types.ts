@@ -5,7 +5,7 @@ import {
 } from '../../generics/types.js';
 
 export interface Profile {
-  userId: string;
+  userId: ObjectId;
   birthday: string;
 }
 
@@ -19,6 +19,6 @@ export interface ProfileJson extends Omit<Profile, 'userId'> {
   userId: string;
 }
 
-export type ProfileRepository = MongoDbRepositoryInterface<ProfileDb>;
+export type ProfileRepository = MongoDbRepositoryInterface<Profile>;
 
-export type ProfileService = MongoDbServiceInterface<ProfileJson>;
+export type ProfileService = MongoDbServiceInterface<Profile>;

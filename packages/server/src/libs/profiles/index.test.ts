@@ -8,6 +8,7 @@ import ProfileService from 'library/src/services/profiles/service.js';
 import UserService from 'library/src/services/users/service.js';
 import { assert, expect, test } from 'vitest';
 import { mock } from 'vitest-mock-extended';
+import { Profile } from '../../resolvers-types.js';
 import { resolvers, typeDefs } from './../../graphql/index.js';
 import { GraphQLContext } from './../../graphql/types.js';
 
@@ -75,18 +76,29 @@ test('Query Profile', async () => {
     user: null
   };
 
-  profiles.findOne.mockReturnValue(
-    Promise.resolve({
-      _id: new ObjectId('123123123123'),
-      birthday: '12345',
-      userId: '4321'
-    })
-  );
+  const profileMock = {
+    _id: new ObjectId('123123123123'),
+    birthday: '12345',
+    userId: new ObjectId('343332313433323134333231')
+  };
+
+  const userMock = {
+    _id: new ObjectId('343332313433323134333231'),
+    email: 'myemail@gmail.com'
+  };
+
+  profiles.findOne.mockReturnValue(Promise.resolve(profileMock));
+  users.findOne.mockReturnValue(Promise.resolve(userMock));
 
   const GET_QUERY = gql.default`
     query {
       profile(_id: "123123123123") {
         _id
+        birthday
+        user {
+          _id
+          email
+        }
       }
     }
   `;
@@ -102,5 +114,13 @@ test('Query Profile', async () => {
 
   assert(response.body.kind === 'single');
   expect(response.body.singleResult.errors).toBeUndefined();
-  expect(response.body.singleResult.data?.['profiles']).toEqual([]);
+
+  const profile = response.body.singleResult.data?.['profile'] as Profile;
+
+  expect(profile.birthday).toEqual(profileMock.birthday);
+
+  expect(profile.user?.email).toEqual(userMock.email);
+
+  expect(profiles.findOne).toBeCalledWith('123123123123');
+  expect(users.findOne).toBeCalledWith('343332313433323134333231');
 });

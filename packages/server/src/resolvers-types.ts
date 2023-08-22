@@ -29,9 +29,15 @@ export type Query = {
   __typename?: 'Query';
   generated?: Maybe<Scalars['String']['output']>;
   hello?: Maybe<Scalars['String']['output']>;
+  profile?: Maybe<Profile>;
   profiles?: Maybe<Array<Maybe<Profile>>>;
   user: User;
   users?: Maybe<Array<Maybe<User>>>;
+};
+
+
+export type QueryProfileArgs = {
+  _id: Scalars['String']['input'];
 };
 
 
@@ -145,6 +151,7 @@ export type ProfileResolvers<ContextType = GraphQLContext, ParentType extends Re
 export type QueryResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   generated?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   hello?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  profile?: Resolver<Maybe<ResolversTypes['Profile']>, ParentType, ContextType, RequireFields<QueryProfileArgs, '_id'>>;
   profiles?: Resolver<Maybe<Array<Maybe<ResolversTypes['Profile']>>>, ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, '_id'>>;
   users?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;

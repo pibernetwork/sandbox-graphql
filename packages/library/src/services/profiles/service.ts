@@ -1,4 +1,5 @@
 import { inject, injectable } from 'inversify';
+import { ObjectId } from 'mongodb';
 import { z } from 'zod';
 import { TYPES } from '../../containers/types.js';
 import GenericService from '../../generics/service.js';
@@ -14,7 +15,7 @@ class ProfileService extends GenericService<Profile> {
 
   override getDocumentSchema(): z.ZodType<Profile, z.ZodTypeDef, Profile> {
     return z.object({
-      userId: z.string().nonempty(),
+      userId: z.instanceof(ObjectId),
       birthday: z.string().nonempty()
     }) satisfies z.ZodType<Profile>;
   }

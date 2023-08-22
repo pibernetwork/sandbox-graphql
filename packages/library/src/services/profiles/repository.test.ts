@@ -1,7 +1,7 @@
 // sum.test.js
 import 'reflect-metadata';
 
-import { Collection } from 'mongodb';
+import { Collection, ObjectId } from 'mongodb';
 import { expect, test } from 'vitest';
 import { mock } from 'vitest-mock-extended';
 import { Connection, Profile } from '../../index.js';
@@ -15,7 +15,7 @@ test('Repository - Find one', async () => {
   connectionMock.getCollection.mockResolvedValue(collection);
 
   const expected: Profile = {
-    userId: '123123123123',
+    userId: new ObjectId('123123123123'),
     birthday: '123123123'
   };
 

@@ -11,7 +11,7 @@ export const typeDefs = gql.default`
 
   type Query {
     profiles: [Profile]
-    profile(_id: String): Profile
+    profile(_id: String!): Profile
   }
 `;
 
@@ -40,10 +40,21 @@ export const resolvers: Resolvers = {
       return profilesDb.map((profile) => {
         return {
           ...profile,
-          userId: profile.userId.toString(),
-          _id: profile._id.toString()
+          userId: profile.userId,
+          _id: profile._id
         };
       });
+    },
+    profile: async (_, args, ctx) => {
+      const { _id } = args;
+
+      const profileDb = await ctx.profiles.findOne(_id);
+
+      if (!profileDb) {
+        throw new Error('Missing profile');
+      }
+
+      return profileDb;
     }
   }
 };

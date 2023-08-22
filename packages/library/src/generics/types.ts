@@ -46,7 +46,7 @@ export type MongoDbServiceReturn<T> = { node: T | WithId<T> | null } & {
 export interface MongoDbServiceInterface<T extends Document> {
   deleteOne(documentId: string): Promise<boolean>;
   insertOne(documentToInsert: T): Promise<MongoDbServiceReturn<T>>;
-  insertMany(documents: T[]): Promise<string[]>;
+  insertMany(documents: T[]): Promise<ObjectId[]>;
   updateOne(
     documentId: string,
     documentToUpdate: T | WithId<T>
@@ -57,6 +57,7 @@ export interface MongoDbServiceInterface<T extends Document> {
     options: MongoDbServiceFindOptions<T>
   ): Promise<WithId<T>[]>;
   findOne(documentId: string): Promise<WithId<T> | null>;
+  findAllByReference(refKey: string, refId: ObjectId): Promise<WithId<T>[]>;
 }
 
 export interface MongoDbServiceFindOptions<T> {

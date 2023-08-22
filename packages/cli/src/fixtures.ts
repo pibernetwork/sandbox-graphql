@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { Profile, User } from 'library';
+import { ObjectId, Profile, User } from 'library';
 
 export function getUsers(length: number): User[] {
   return Array.from({
@@ -13,7 +13,7 @@ export function getUsers(length: number): User[] {
   });
 }
 
-function getRandomId(items: string[]) {
+function getRandomId(items: ObjectId[]) {
   const id = items[Math.floor(Math.random() * items.length)];
   if (!id) {
     throw new Error('Random ID not found');
@@ -22,7 +22,7 @@ function getRandomId(items: string[]) {
   return id;
 }
 
-export function getProfiles(length: number, usersIds: string[]): Profile[] {
+export function getProfiles(length: number, usersIds: ObjectId[]): Profile[] {
   return Array.from({
     length
   }).map(() => {

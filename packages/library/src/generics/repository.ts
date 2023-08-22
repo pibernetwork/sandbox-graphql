@@ -59,11 +59,11 @@ abstract class GenericRepository<T extends Document>
   async findOne(documentId: string): Promise<WithId<T> | null> {
     const collection = await this.getCollection(this.collectionName);
 
-    const messages = collection.findOne({
+    const document = collection.findOne({
       _id: { $eq: new ObjectId(documentId) } as unknown as Filter<T>
     });
 
-    return messages || null;
+    return document || null;
   }
 
   async findAllByIds(ids: readonly ObjectId[]): Promise<WithId<T>[]> {

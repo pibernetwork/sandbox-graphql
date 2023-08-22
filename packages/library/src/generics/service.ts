@@ -74,7 +74,7 @@ abstract class Service<T extends Document>
     return this._repository.findAllByIds(ids);
   }
 
-  async findAllByReference(refKey: string, refId: string) {
+  async findAllByReference(refKey: string, refId: ObjectId) {
     return this._repository.findAllFilter({
       [refKey]: { $eq: refId }
     } as unknown as Filter<T>);
@@ -104,9 +104,9 @@ abstract class Service<T extends Document>
     }
   }
 
-  async insertMany(documents: T[]): Promise<string[]> {
+  async insertMany(documents: T[]): Promise<ObjectId[]> {
     const ids = await this._repository.insertMany(documents);
-    return ids.map((id) => id.toString());
+    return ids;
   }
 
   // update
