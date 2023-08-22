@@ -17,11 +17,14 @@ export interface MongoDbRepositoryInterface<T extends Document> {
   ): Promise<WithId<T>>;
   insertOne(documentToInsert: T): Promise<WithId<T>>;
   insertMany(documents: T[]): Promise<ObjectId[]>;
-  find(options: MongoDbRepositoryFindOptions<T>): Promise<WithId<T>[]>;
+
   findOne(documentId: string): Promise<WithId<T> | null>;
   findAll(): Promise<WithId<T>[]>;
-  queryAllByIds(ids: readonly ObjectId[]): Promise<WithId<T>[]>;
-  findWithFilter(filter: Filter<T>): Promise<WithId<T>[]>;
+  findAllConnection(
+    options: MongoDbRepositoryFindOptions<T>
+  ): Promise<WithId<T>[]>;
+  findAllByIds(ids: readonly ObjectId[]): Promise<WithId<T>[]>;
+  findAllFilter(filter: Filter<T>): Promise<WithId<T>[]>;
 }
 
 // Services
@@ -50,11 +53,9 @@ export interface MongoDbServiceInterface<T extends Document> {
   ): Promise<MongoDbServiceReturn<T>>;
   findAll(): Promise<WithId<T>[]>;
   findAllByIds(ids: readonly ObjectId[]): Promise<WithId<T>[]>;
-  findByIds(
-    ids: readonly ObjectId[],
+  findAllConnection(
     options: MongoDbServiceFindOptions<T>
   ): Promise<WithId<T>[]>;
-  find(options: MongoDbServiceFindOptions<T>): Promise<WithId<T>[]>;
   findOne(documentId: string): Promise<WithId<T> | null>;
 }
 

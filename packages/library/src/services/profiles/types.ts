@@ -14,6 +14,11 @@ export interface ProfileDb extends Omit<Profile, 'userId'> {
   userId: ObjectId;
 }
 
+export interface ProfileJson extends Omit<Profile, 'userId'> {
+  _id: string;
+  userId: string;
+}
+
 export type ProfileRepository = MongoDbRepositoryInterface<ProfileDb>;
 
-export type ProfileService = MongoDbServiceInterface<Profile>;
+export type ProfileService = MongoDbServiceInterface<ProfileJson>;

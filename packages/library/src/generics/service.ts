@@ -20,35 +20,67 @@ abstract class Service<T extends Document>
     this._repository = _repository;
   }
 
-  findByIds(
-    ids: readonly ObjectId[],
-    options: MongoDbServiceFindOptions<T>
-  ): Promise<WithId<T>[]> {
-    console.log(ids, options);
-    throw new Error('Method not implemented.');
-  }
-
-  getRepository() {
-    return this._repository;
-  }
-
-  getDocumentSchema(): z.ZodType<T> {
-    throw new Error('Calling a method from abstract class');
-  }
-
-  async deleteOne(documentId: string) {
-    return this._repository.deleteOne(documentId);
-  }
+  // find one
 
   async findOne(documentId: string) {
     return this._repository.findOne(documentId);
   }
 
-  async insertMany(documents: T[]): Promise<string[]> {
-    const ids = await this._repository.insertMany(documents);
-    return ids.map((id) => id.toString());
+  // find all
+
+  async findAllConnection(options: MongoDbServiceFindOptions<T>) {
+    const { page, perPage, sortBy, sortDirection /*, filter */ } = options;
+
+    const skip = (page - 1) * perPage;
+    const limit = perPage;
+
+    const direction = sortDirection === 'asc' ? 1 : -1;
+
+    const queryFilter: Filter<T> = {};
+
+    // if (filter.type && typeof filter.type === 'string') {
+    //   queryFilter['type'] = { $eq: filter.type };
+    // }
+
+    // if (filter.amount && typeof filter.amount === 'string') {
+    //   const entries = filter.amount.split(',');
+    //   if (entries.length === 1) {
+    //     queryFilter['amount'] = { $eq: parseInt(filter.amount) };
+    //   }
+    //   if (entries.length > 1) {
+    //     const min = (entries[0] && parseInt(entries[0])) || 0;
+    //     const max = (entries[1] && parseInt(entries[1])) || 0;
+
+    //     queryFilter['amount'] = { $gte: min, $lte: max };
+    //   }
+    // }
+
+    const documents = await this._repository.findAllConnection({
+      skip,
+      limit: limit,
+      sortBy: sortBy as keyof T,
+      sortDirection: direction,
+      filter: queryFilter
+    });
+
+    return documents;
   }
 
+  async findAll() {
+    return this._repository.findAll();
+  }
+
+  async findAllByIds(ids: readonly ObjectId[]) {
+    return this._repository.findAllByIds(ids);
+  }
+
+  async findAllByReference(refKey: string, refId: string) {
+    return this._repository.findAllFilter({
+      [refKey]: { $eq: refId }
+    } as unknown as Filter<T>);
+  }
+
+  // insert
   async insertOne(documentToInsert: T): Promise<MongoDbServiceReturn<T>> {
     try {
       this.parseValidation(documentToInsert);
@@ -72,9 +104,12 @@ abstract class Service<T extends Document>
     }
   }
 
-  parseValidation(documentToValidate: T) {
-    this.getDocumentSchema().parse(documentToValidate);
+  async insertMany(documents: T[]): Promise<string[]> {
+    const ids = await this._repository.insertMany(documents);
+    return ids.map((id) => id.toString());
   }
+
+  // update
 
   async updateOne(
     documentId: string,
@@ -104,59 +139,27 @@ abstract class Service<T extends Document>
     }
   }
 
-  async findByReference(refKey: string, refId: string) {
-    return this._repository.findWithFilter({
-      [refKey]: { $eq: refId }
-    } as unknown as Filter<T>);
+  // delete
+
+  async deleteOne(documentId: string) {
+    return this._repository.deleteOne(documentId);
   }
 
-  async find(options: MongoDbServiceFindOptions<T>) {
-    const { page, perPage, sortBy, sortDirection /*, filter */ } = options;
+  // utils
 
-    const skip = (page - 1) * perPage;
-    const limit = perPage;
-
-    const direction = sortDirection === 'asc' ? 1 : -1;
-
-    const queryFilter: Filter<T> = {};
-
-    // if (filter.type && typeof filter.type === 'string') {
-    //   queryFilter['type'] = { $eq: filter.type };
-    // }
-
-    // if (filter.amount && typeof filter.amount === 'string') {
-    //   const entries = filter.amount.split(',');
-    //   if (entries.length === 1) {
-    //     queryFilter['amount'] = { $eq: parseInt(filter.amount) };
-    //   }
-    //   if (entries.length > 1) {
-    //     const min = (entries[0] && parseInt(entries[0])) || 0;
-    //     const max = (entries[1] && parseInt(entries[1])) || 0;
-
-    //     queryFilter['amount'] = { $gte: min, $lte: max };
-    //   }
-    // }
-
-    const documents = await this._repository.find({
-      skip,
-      limit: limit,
-      sortBy: sortBy as keyof T,
-      sortDirection: direction,
-      filter: queryFilter
-    });
-
-    return documents;
+  getRepository() {
+    return this._repository;
   }
 
-  async findAll() {
-    return this._repository.findAll();
+  getDocumentSchema(): z.ZodType<T> {
+    throw new Error('Calling a method from abstract class');
   }
 
-  async findAllByIds(ids: readonly ObjectId[]) {
-    return this._repository.queryAllByIds(ids);
+  parseValidation(documentToValidate: T) {
+    this.getDocumentSchema().parse(documentToValidate);
   }
 
-  _mapResultToIds(
+  documentsToIds(
     _ids: readonly ObjectId[],
     documents: WithId<T>[]
   ): WithId<T>[] {
@@ -175,8 +178,8 @@ abstract class Service<T extends Document>
   getLoader() {
     return new DataLoader<ObjectId, WithId<T>>(
       async (keys: readonly ObjectId[]) => {
-        const documents = await this.getRepository().queryAllByIds(keys);
-        return this._mapResultToIds(keys, documents);
+        const documents = await this.getRepository().findAllByIds(keys);
+        return this.documentsToIds(keys, documents);
       }
     );
   }

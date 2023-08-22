@@ -22,7 +22,7 @@ export const resolvers: Resolvers = {
     profiles: async (user, __, ctx) => {
       const { _id } = user;
 
-      const profiles = await ctx.profiles.findByReference(
+      const profiles = await ctx.profiles.findAllByReference(
         'userId',
         _id.toString()
       );

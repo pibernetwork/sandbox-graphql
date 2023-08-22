@@ -27,47 +27,54 @@ abstract class GenericRepository<T extends Document>
     this._connection = connection;
   }
 
-  async getCollection(collectionName: string | null): Promise<Collection<T>> {
-    if (collectionName === null) {
-      throw new Error('Missing collection name');
-    }
-    return this._connection.getCollection<T>(collectionName);
-  }
+  // find
 
-  async deleteOne(documentId: string) {
-    const currentMessage = await this.findOne(documentId);
-
-    if (!currentMessage) {
-      throw new Error('Message not found');
-    }
-
+  async findAllConnection(
+    options: MongoDbRepositoryFindOptions<T>
+  ): Promise<WithId<T>[]> {
     const collection = await this.getCollection(this.collectionName);
 
-    await collection.deleteOne({
-      _id: new ObjectId(documentId)
-    } as unknown as Filter<T>);
+    const { sortBy, sortDirection, skip, limit, filter } = options;
 
-    return true;
+    return collection
+      .find(filter || {})
+      .skip(skip)
+      .limit(limit)
+      .sort({ [sortBy]: sortDirection })
+      .toArray();
   }
 
-  async updateOne(documentId: string, documentToUpdate: T): Promise<WithId<T>> {
-    const currentMessage = await this.findOne(documentId);
-
-    if (!currentMessage) {
-      throw new Error('Message not found');
-    }
-
-    const newMessage: WithId<T> = { ...currentMessage, ...documentToUpdate };
-
+  async findAllFilter(filter: Filter<T>): Promise<WithId<T>[]> {
     const collection = await this.getCollection(this.collectionName);
 
-    //const document =
-    await collection.updateOne(
-      { _id: { $eq: new ObjectId(documentId) } } as unknown as Filter<T>,
-      { $set: newMessage } as unknown as Readonly<Partial<T>>
-    );
+    return collection.find(filter).toArray();
+  }
 
-    return newMessage;
+  async findAll(): Promise<WithId<T>[]> {
+    const collection = await this.getCollection(this.collectionName);
+
+    return collection.find({}).toArray();
+  }
+
+  async findOne(documentId: string): Promise<WithId<T> | null> {
+    const collection = await this.getCollection(this.collectionName);
+
+    const messages = collection.findOne({
+      _id: { $eq: new ObjectId(documentId) } as unknown as Filter<T>
+    });
+
+    return messages || null;
+  }
+
+  async findAllByIds(ids: readonly ObjectId[]): Promise<WithId<T>[]> {
+    const collection = await this.getCollection(this.collectionName);
+
+    return await collection
+      .find({
+        _id: { $in: ids } as Filter<T>
+      })
+
+      .toArray();
   }
 
   async insertOne(documentToInsert: T): Promise<WithId<T>> {
@@ -101,50 +108,47 @@ abstract class GenericRepository<T extends Document>
     return ids;
   }
 
-  async find(options: MongoDbRepositoryFindOptions<T>): Promise<WithId<T>[]> {
+  async updateOne(documentId: string, documentToUpdate: T): Promise<WithId<T>> {
+    const currentMessage = await this.findOne(documentId);
+
+    if (!currentMessage) {
+      throw new Error('Message not found');
+    }
+
+    const newMessage: WithId<T> = { ...currentMessage, ...documentToUpdate };
+
     const collection = await this.getCollection(this.collectionName);
 
-    const { sortBy, sortDirection, skip, limit, filter } = options;
+    //const document =
+    await collection.updateOne(
+      { _id: { $eq: new ObjectId(documentId) } } as unknown as Filter<T>,
+      { $set: newMessage } as unknown as Readonly<Partial<T>>
+    );
 
-    return collection
-      .find(filter || {})
-      .skip(skip)
-      .limit(limit)
-      .sort({ [sortBy]: sortDirection })
-      .toArray();
+    return newMessage;
   }
 
-  async findWithFilter(filter: Filter<T>): Promise<WithId<T>[]> {
+  async deleteOne(documentId: string) {
+    const currentMessage = await this.findOne(documentId);
+
+    if (!currentMessage) {
+      throw new Error('Message not found');
+    }
+
     const collection = await this.getCollection(this.collectionName);
 
-    return collection.find(filter).toArray();
+    await collection.deleteOne({
+      _id: new ObjectId(documentId)
+    } as unknown as Filter<T>);
+
+    return true;
   }
 
-  async findAll(): Promise<WithId<T>[]> {
-    const collection = await this.getCollection(this.collectionName);
-
-    return collection.find({}).toArray();
-  }
-
-  async findOne(documentId: string): Promise<WithId<T> | null> {
-    const collection = await this.getCollection(this.collectionName);
-
-    const messages = collection.findOne({
-      _id: { $eq: new ObjectId(documentId) } as unknown as Filter<T>
-    });
-
-    return messages || null;
-  }
-
-  async queryAllByIds(ids: readonly ObjectId[]): Promise<WithId<T>[]> {
-    const collection = await this.getCollection(this.collectionName);
-
-    return await collection
-      .find({
-        _id: { $in: ids } as Filter<T>
-      })
-
-      .toArray();
+  async getCollection(collectionName: string | null): Promise<Collection<T>> {
+    if (collectionName === null) {
+      throw new Error('Missing collection name');
+    }
+    return this._connection.getCollection<T>(collectionName);
   }
 }
 
