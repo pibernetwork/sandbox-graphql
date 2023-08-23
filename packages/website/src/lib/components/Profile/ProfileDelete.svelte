@@ -8,7 +8,7 @@
 
   const delProfile = graphql(`
     mutation DelProfile($_id: String!) {
-      delProfile(_id: $_id)
+      delProfile(_id: $_id) @Profile_delete
     }
   `);
 

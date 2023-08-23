@@ -1,6 +1,6 @@
 type Mutation {
   addProfile(birthday: String!, userId: String!, weight: Float!): Profile
-  delProfile(_id: String!): Boolean!
+  delProfile(_id: String!): String!
   editProfile(_id: String!, birthday: String!, userId: String!, weight: Float!): Profile
 }
 

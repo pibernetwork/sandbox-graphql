@@ -21,7 +21,7 @@ export type Scalars = {
 export type Mutation = {
   __typename?: 'Mutation';
   addProfile?: Maybe<Profile>;
-  delProfile: Scalars['Boolean']['output'];
+  delProfile: Scalars['String']['output'];
   editProfile?: Maybe<Profile>;
 };
 
@@ -61,7 +61,7 @@ export type Query = {
   profiles: Array<Maybe<Profile>>;
   user: User;
   users?: Maybe<Array<Maybe<User>>>;
-  usersOptions: Array<Maybe<SelectOption>>;
+  usersOptions: Array<SelectOption>;
 };
 
 
@@ -184,7 +184,7 @@ export type ResolversParentTypes = ResolversObject<{
 
 export type MutationResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   addProfile?: Resolver<Maybe<ResolversTypes['Profile']>, ParentType, ContextType, RequireFields<MutationAddProfileArgs, 'birthday' | 'userId' | 'weight'>>;
-  delProfile?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDelProfileArgs, '_id'>>;
+  delProfile?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationDelProfileArgs, '_id'>>;
   editProfile?: Resolver<Maybe<ResolversTypes['Profile']>, ParentType, ContextType, RequireFields<MutationEditProfileArgs, '_id' | 'birthday' | 'userId' | 'weight'>>;
 }>;
 
@@ -203,7 +203,7 @@ export type QueryResolvers<ContextType = GraphQLContext, ParentType extends Reso
   profiles?: Resolver<Array<Maybe<ResolversTypes['Profile']>>, ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, '_id'>>;
   users?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
-  usersOptions?: Resolver<Array<Maybe<ResolversTypes['SelectOption']>>, ParentType, ContextType>;
+  usersOptions?: Resolver<Array<ResolversTypes['SelectOption']>, ParentType, ContextType>;
 }>;
 
 export type SelectOptionResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['SelectOption'] = ResolversParentTypes['SelectOption']> = ResolversObject<{

@@ -19,7 +19,7 @@ export const typeDefs = gql.default`
   type Mutation {
     addProfile(userId: String!, birthday: String!, weight: Float!): Profile
     editProfile(_id: String!, userId: String!, birthday: String!, weight: Float!): Profile
-    delProfile(_id: String!): Boolean!
+    delProfile(_id: String!): String!
   }
 `;
 
@@ -102,8 +102,8 @@ export const resolvers: Resolvers = {
     delProfile: async (_, args, ctx) => {
       const { _id } = args;
 
-      const profile = await ctx.profiles.deleteOne(_id);
-      return profile;
+      await ctx.profiles.deleteOne(_id);
+      return _id;
     }
   }
 };
