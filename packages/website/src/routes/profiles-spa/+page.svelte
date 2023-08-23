@@ -14,7 +14,7 @@
 
   const Profiles = graphql(`
     query Profiles @load {
-      profiles {
+      profiles @list(name: "Profiles_Items") {
         _id
         user {
           _id
@@ -48,6 +48,9 @@
     </div>
 
     <div class="col-span-9">
+      <div>
+        Total of {$Profiles.data.profiles.length}
+      </div>
       <Table>
         <TableHead>
           <TableHeadCell>Email</TableHeadCell>

@@ -8,6 +8,7 @@
     mutation AddProfile($userId: String!, $birthday: String!, $weight: Float!) {
       addProfile(userId: $userId, birthday: $birthday, weight: $weight) {
         _id
+        ...Profiles_Items_insert
       }
     }
   `);

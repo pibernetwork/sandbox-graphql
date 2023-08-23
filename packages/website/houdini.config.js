@@ -7,6 +7,14 @@ const config = {
   },
   plugins: {
     'houdini-svelte': {}
+  },
+  types: {
+    User: {
+      keys: ['_id']
+    },
+    Profile: {
+      keys: ['_id']
+    }
   }
 };
 
