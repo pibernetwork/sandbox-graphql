@@ -1,8 +1,12 @@
 <script lang="ts">
   import { graphql } from '$houdini';
+  import type { PageModes } from '$lib';
+  import ProfileDelete from '$lib/components/Profile/ProfileDelete.svelte';
   import ProfileFormAdd from '$lib/components/Profile/ProfileFormAdd.svelte';
+  import ProfileFormEdit from '$lib/components/Profile/ProfileFormEdit.svelte';
   import ProfileView from '$lib/components/Profile/ProfileView.svelte';
   import {
+    Button,
     Heading,
     Table,
     TableBody,
@@ -31,20 +35,35 @@
   `);
 
   let selected: string | null = null;
+
+  let mode: PageModes = null;
 </script>
 
 <Heading tag="h1">Profiles SPA</Heading>
 
 {#if $Profiles.data}
   <div class="grid grid-cols-12">
-    <div class="col-span-3">
-      <div>Actions</div>
+    <div class="col-span-3 py-4 px-2">
+      <Button on:click={() => (mode = 'create')}>Create</Button>
 
-      <ProfileFormAdd users={$Profiles.data.usersOptions} />
-      <div>Edit</div>
-      {#if selected}
-        <ProfileView _id={selected} />
-      {/if}
+      <div class="py-2">
+        {#if mode === 'create'}
+          <ProfileFormAdd users={$Profiles.data.usersOptions} bind:mode />
+        {/if}
+        {#if selected && mode === 'edit'}
+          <ProfileFormEdit users={$Profiles.data.usersOptions} _id={selected} bind:mode />
+        {/if}
+
+        {#if selected && mode === 'delete'}
+          <ProfileDelete _id={selected} bind:mode />
+        {/if}
+        {#if selected && mode === 'view'}
+          <ProfileView _id={selected} />
+          <Button on:click={() => (mode = 'edit')}>Edit</Button>
+          <Button on:click={() => (mode = 'delete')}>Delete</Button>
+          <Button on:click={() => (mode = null)}>Back</Button>
+        {/if}
+      </div>
     </div>
 
     <div class="col-span-9">

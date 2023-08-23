@@ -1,8 +1,10 @@
 <script lang="ts">
   import { graphql } from '$houdini';
+  import type { PageModes } from '$lib';
   import { Button, Heading, Input, Label, Select } from 'flowbite-svelte';
 
   export let users: { readonly name: string; readonly value: string }[];
+  export let mode: PageModes;
 
   const addProfile = graphql(`
     mutation AddProfile($userId: String!, $birthday: String!, $weight: Float!) {
@@ -29,9 +31,7 @@
       userId
     });
 
-    if (response.data?.addProfile?._id) {
-      alert('Success');
-    }
+    mode = null;
   }
 </script>
 
@@ -53,6 +53,6 @@
   </div>
   <div class="mb-6">
     <Button type="submit">Create</Button>
-    <Button href="/schedule/groups">Back</Button>
+    <Button on:click={() => (mode = null)}>Cancel</Button>
   </div>
 </form>
