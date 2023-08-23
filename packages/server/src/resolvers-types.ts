@@ -53,12 +53,18 @@ export type Profile = {
   weight?: Maybe<Scalars['Float']['output']>;
 };
 
+export type ProfileConnectionFilter = {
+  birtday?: InputMaybe<Scalars['String']['input']>;
+  weight?: InputMaybe<Scalars['Float']['input']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   generated?: Maybe<Scalars['String']['output']>;
   hello?: Maybe<Scalars['String']['output']>;
   profile?: Maybe<Profile>;
   profiles: Array<Maybe<Profile>>;
+  profilesConnection: Array<Maybe<Profile>>;
   user: User;
   users?: Maybe<Array<Maybe<User>>>;
   usersOptions: Array<SelectOption>;
@@ -67,6 +73,15 @@ export type Query = {
 
 export type QueryProfileArgs = {
   _id: Scalars['String']['input'];
+};
+
+
+export type QueryProfilesConnectionArgs = {
+  filters?: InputMaybe<ProfileConnectionFilter>;
+  limit: Scalars['Int']['input'];
+  page: Scalars['Int']['input'];
+  sortBy: Scalars['String']['input'];
+  sortOrder: Scalars['String']['input'];
 };
 
 
@@ -162,8 +177,10 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = ResolversObject<{
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
+  Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
   Profile: ResolverTypeWrapper<ProfileWithId>;
+  ProfileConnectionFilter: ProfileConnectionFilter;
   Query: ResolverTypeWrapper<{}>;
   SelectOption: ResolverTypeWrapper<SelectOption>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
@@ -174,8 +191,10 @@ export type ResolversTypes = ResolversObject<{
 export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars['Boolean']['output'];
   Float: Scalars['Float']['output'];
+  Int: Scalars['Int']['output'];
   Mutation: {};
   Profile: ProfileWithId;
+  ProfileConnectionFilter: ProfileConnectionFilter;
   Query: {};
   SelectOption: SelectOption;
   String: Scalars['String']['output'];
@@ -201,6 +220,7 @@ export type QueryResolvers<ContextType = GraphQLContext, ParentType extends Reso
   hello?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   profile?: Resolver<Maybe<ResolversTypes['Profile']>, ParentType, ContextType, RequireFields<QueryProfileArgs, '_id'>>;
   profiles?: Resolver<Array<Maybe<ResolversTypes['Profile']>>, ParentType, ContextType>;
+  profilesConnection?: Resolver<Array<Maybe<ResolversTypes['Profile']>>, ParentType, ContextType, RequireFields<QueryProfilesConnectionArgs, 'limit' | 'page' | 'sortBy' | 'sortOrder'>>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, '_id'>>;
   users?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
   usersOptions?: Resolver<Array<ResolversTypes['SelectOption']>, ParentType, ContextType>;

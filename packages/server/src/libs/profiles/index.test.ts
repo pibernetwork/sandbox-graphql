@@ -55,6 +55,58 @@ test('Query Profiles', async () => {
   expect(response.body.singleResult.data?.['profiles']).toEqual([]);
 });
 
+test('Query Profiles Connection', async () => {
+  const server = new ApolloServer<GraphQLContext>({
+    resolvers,
+    typeDefs
+  });
+
+  const users = mock<UserService>();
+
+  const profiles = mock<ProfileService>();
+
+  const connection = mock<Connection>();
+
+  const contextValue: GraphQLContext = {
+    connection,
+    users,
+    profiles,
+    user: null
+  };
+
+  profiles.findAllConnection.mockReturnValue(Promise.resolve([]));
+
+  const GET_QUERY = gql.default`
+    query($page: Int!, $limit: Int!, $sortBy: String!, $sortOrder: String!, $filters: ProfileConnectionFilter!) {
+      profilesConnection(page: $page, limit: $limit, sortBy: $sortBy, sortOrder: $sortOrder, filters: $filters) {
+        _id
+      }
+    }
+  `;
+
+  const response = await server.executeOperation(
+    {
+      query: GET_QUERY,
+      variables: {
+        page: 1,
+        limit: 10,
+        sortBy: 'user.email',
+        sortOrder: 'asc',
+        filters: {}
+      }
+    },
+    {
+      contextValue
+    }
+  );
+
+  assert(response.body.kind === 'single');
+  expect(response.body.singleResult.errors).toBeUndefined();
+  expect(response.body.singleResult.data?.['profilesConnection']).toEqual([]);
+
+  expect(profiles.findAllConnection).toBeCalled();
+});
+
 test('Query Profile', async () => {
   const server = new ApolloServer<GraphQLContext>({
     resolvers,

@@ -11,11 +11,17 @@ type Profile {
   weight: Float
 }
 
+input ProfileConnectionFilter {
+  birtday: String
+  weight: Float
+}
+
 type Query {
   generated: String
   hello: String
   profile(_id: String!): Profile
   profiles: [Profile]!
+  profilesConnection(filters: ProfileConnectionFilter, limit: Int!, page: Int!, sortBy: String!, sortOrder: String!): [Profile]!
   user(_id: String!): User!
   users: [User]
   usersOptions: [SelectOption!]!

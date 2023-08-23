@@ -1,4 +1,4 @@
-import { ObjectId, Profile } from 'library';
+import { MongoDbServiceFindOptions, ObjectId, Profile } from 'library';
 import { Resolvers } from '../../resolvers-types.js';
 
 import gql from 'graphql-tag';
@@ -11,8 +11,15 @@ export const typeDefs = gql.default`
     weight: Float
   }
 
+
+  input ProfileConnectionFilter {
+    birtday: String
+    weight: Float
+  }
+
   type Query {
     profiles: [Profile]!
+    profilesConnection(page: Int!, limit: Int!, sortBy: String!, sortOrder: String!, filters: ProfileConnectionFilter): [Profile]!
     profile(_id: String!): Profile
   }
 
@@ -42,6 +49,24 @@ export const resolvers: Resolvers = {
     }
   },
   Query: {
+    profilesConnection: async (_, args, ctx) => {
+      const options: MongoDbServiceFindOptions<Profile> = {
+        page: args.page,
+        perPage: args.limit,
+        sortBy: args.sortBy as keyof Profile,
+        sortDirection: args.sortOrder as 'asc' | 'desc',
+        filter: args.filters as { [key in keyof Profile]: unknown }
+      };
+      const profilesDb = await ctx.profiles.findAllConnection(options);
+
+      return profilesDb.map((profile) => {
+        return {
+          ...profile,
+          userId: profile.userId,
+          _id: profile._id
+        };
+      });
+    },
     profiles: async (_, __, ctx) => {
       const profilesDb = await ctx.profiles.findAll();
 
