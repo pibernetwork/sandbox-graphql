@@ -2,8 +2,7 @@
   import { graphql } from '$houdini';
   import type { PageModes } from '$lib';
   import ProfileDelete from '$lib/components/Profile/ProfileDelete.svelte';
-  import ProfileFormAdd from '$lib/components/Profile/ProfileFormAdd.svelte';
-  import ProfileFormEdit from '$lib/components/Profile/ProfileFormEdit.svelte';
+  import ProfileForm from '$lib/components/Profile/ProfileForm.svelte';
   import ProfileTable from '$lib/components/Profile/ProfileTable.svelte';
   import ProfileView from '$lib/components/Profile/ProfileView.svelte';
   import { Button, Heading } from 'flowbite-svelte';
@@ -21,6 +20,10 @@
 
   let mode: PageModes = null;
 
+  function createItem() {
+    selected = null;
+    mode = 'create';
+  }
   $: selected = mode === null ? null : selected;
 </script>
 
@@ -29,15 +32,20 @@
 {#if $Options.data}
   <div class="grid grid-cols-12">
     <div class="col-span-3 py-4 px-2">
-      <Button on:click={() => (mode = 'create')}>Create</Button>
+      <Button on:click={createItem}>Create</Button>
 
       <div class="py-2">
         {#if mode === 'create'}
-          <ProfileFormAdd users={$Options.data.usersOptions} bind:mode bind:selected />
+          <ProfileForm users={$Options.data.usersOptions} _id={selected} bind:mode bind:selected />
         {/if}
         {#if selected}
           {#if mode === 'edit'}
-            <ProfileFormEdit users={$Options.data.usersOptions} _id={selected} bind:mode />
+            <ProfileForm
+              users={$Options.data.usersOptions}
+              _id={selected}
+              bind:mode
+              bind:selected
+            />
           {/if}
 
           {#if mode === 'delete'}
