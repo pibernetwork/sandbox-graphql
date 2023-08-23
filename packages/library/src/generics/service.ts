@@ -29,7 +29,7 @@ abstract class Service<T extends Document>
   // find all
 
   async findAllConnection(options: MongoDbServiceFindOptions<T>) {
-    const { page, perPage, sortBy, sortDirection /*, filter */ } = options;
+    const { page, perPage, sortBy, sortDirection, filter } = options;
 
     const skip = (page - 1) * perPage;
     const limit = perPage;
@@ -38,22 +38,30 @@ abstract class Service<T extends Document>
 
     const queryFilter: Filter<T> = {};
 
-    // if (filter.type && typeof filter.type === 'string') {
-    //   queryFilter['type'] = { $eq: filter.type };
-    // }
+    const filtersKeys = Object.keys(filter) as Array<keyof typeof filter>;
 
-    // if (filter.amount && typeof filter.amount === 'string') {
-    //   const entries = filter.amount.split(',');
-    //   if (entries.length === 1) {
-    //     queryFilter['amount'] = { $eq: parseInt(filter.amount) };
-    //   }
-    //   if (entries.length > 1) {
-    //     const min = (entries[0] && parseInt(entries[0])) || 0;
-    //     const max = (entries[1] && parseInt(entries[1])) || 0;
+    for (const fieldName of filtersKeys) {
+      const fieldFilter = filter[fieldName];
 
-    //     queryFilter['amount'] = { $gte: min, $lte: max };
-    //   }
-    // }
+      if (!fieldFilter) {
+        continue;
+      }
+      if ('between' in fieldFilter) {
+        const { between } = fieldFilter;
+
+        const { to, from } = between;
+
+        const name = fieldName as keyof Filter<T>;
+        queryFilter[name] = {};
+
+        if (from) {
+          queryFilter[name].$gt = from;
+        }
+        if (to) {
+          queryFilter[name].$lt = to;
+        }
+      }
+    }
 
     const documents = await this._repository.findAllConnection({
       skip,

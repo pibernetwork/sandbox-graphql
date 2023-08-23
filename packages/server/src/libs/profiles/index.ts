@@ -1,10 +1,15 @@
-import { MongoDbServiceFindOptions, ObjectId, Profile } from 'library';
+import {
+  FieldFilter,
+  MongoDbServiceFindOptions,
+  ObjectId,
+  Profile
+} from 'library';
 import { Resolvers } from '../../resolvers-types.js';
 
 import gql from 'graphql-tag';
 
 export const typeDefs = gql.default`
-  type Profile {
+  type Profile  {
     _id: String
     user: User
     birthday: String
@@ -12,9 +17,18 @@ export const typeDefs = gql.default`
   }
 
 
+  input FilterBetween {
+    from: Float
+    to: Float
+  }
+
+  input ProfileWeightFilter {
+    between: FilterBetween
+  }
+
+
   input ProfileConnectionFilter {
-    birtday: String
-    weight: Float
+    weight: ProfileWeightFilter
   }
 
   type Query {
@@ -55,7 +69,7 @@ export const resolvers: Resolvers = {
         perPage: args.limit,
         sortBy: args.sortBy as keyof Profile,
         sortDirection: args.sortOrder as 'asc' | 'desc',
-        filter: args.filters as { [key in keyof Profile]: unknown }
+        filter: args.filters as { [key in keyof Profile]?: FieldFilter }
       };
       const profilesDb = await ctx.profiles.findAllConnection(options);
 

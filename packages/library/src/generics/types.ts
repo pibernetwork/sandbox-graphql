@@ -1,5 +1,53 @@
 import { Document, Filter, ObjectId, WithId } from 'mongodb';
 
+export interface MongoDbServiceInterface<T extends Document> {
+  deleteOne(documentId: string): Promise<boolean>;
+  insertOne(documentToInsert: T): Promise<MongoDbServiceReturn<T>>;
+  insertMany(documents: T[]): Promise<ObjectId[]>;
+  updateOne(
+    documentId: string,
+    documentToUpdate: Partial<T | WithId<T>>
+  ): Promise<MongoDbServiceReturn<T>>;
+  findAll(): Promise<WithId<T>[]>;
+  findAllByIds(ids: readonly ObjectId[]): Promise<WithId<T>[]>;
+  findAllConnection(
+    options: MongoDbServiceFindOptions<T>
+  ): Promise<WithId<T>[]>;
+  findOne(documentId: string): Promise<WithId<T> | null>;
+  findAllByReference(refKey: string, refId: ObjectId): Promise<WithId<T>[]>;
+}
+
+// Services
+export type MongoDbFieldError<T> = {
+  key: keyof T;
+  message: string;
+  type: string;
+};
+
+export type MongoDbServiceReturn<T> = { node: WithId<T> | null } & {
+  errors: MongoDbFieldError<T>[];
+};
+
+// export interface Node<T> {
+//   node: T | null;
+//   errors: MongoDbFieldError<T>[];
+// }
+
+export interface FieldFilter {
+  between?: {
+    from?: unknown;
+    to?: unknown;
+  };
+}
+
+export interface MongoDbServiceFindOptions<T> {
+  page: number;
+  perPage: number;
+  sortDirection: 'asc' | 'desc';
+  sortBy: keyof T;
+  filter: { [key in keyof Partial<T>]?: FieldFilter };
+}
+
 // Repository
 export interface MongoDbRepositoryFindOptions<T> {
   skip: number;
@@ -25,45 +73,4 @@ export interface MongoDbRepositoryInterface<T extends Document> {
   ): Promise<WithId<T>[]>;
   findAllByIds(ids: readonly ObjectId[]): Promise<WithId<T>[]>;
   findAllFilter(filter: Filter<T>): Promise<WithId<T>[]>;
-}
-
-// Services
-export type MongoDbFieldError<T> = {
-  key: keyof T;
-  message: string;
-  type: string;
-};
-
-export type MongoDbServiceReturn<T> = { node: WithId<T> | null } & {
-  errors: MongoDbFieldError<T>[];
-};
-
-// export interface Node<T> {
-//   node: T | null;
-//   errors: MongoDbFieldError<T>[];
-// }
-
-export interface MongoDbServiceInterface<T extends Document> {
-  deleteOne(documentId: string): Promise<boolean>;
-  insertOne(documentToInsert: T): Promise<MongoDbServiceReturn<T>>;
-  insertMany(documents: T[]): Promise<ObjectId[]>;
-  updateOne(
-    documentId: string,
-    documentToUpdate: Partial<T | WithId<T>>
-  ): Promise<MongoDbServiceReturn<T>>;
-  findAll(): Promise<WithId<T>[]>;
-  findAllByIds(ids: readonly ObjectId[]): Promise<WithId<T>[]>;
-  findAllConnection(
-    options: MongoDbServiceFindOptions<T>
-  ): Promise<WithId<T>[]>;
-  findOne(documentId: string): Promise<WithId<T> | null>;
-  findAllByReference(refKey: string, refId: ObjectId): Promise<WithId<T>[]>;
-}
-
-export interface MongoDbServiceFindOptions<T> {
-  page: number;
-  perPage: number;
-  sortDirection: 'asc' | 'desc';
-  sortBy: keyof T;
-  filter: { [key in keyof Partial<T>]: unknown };
 }

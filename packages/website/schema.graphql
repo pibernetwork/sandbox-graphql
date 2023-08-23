@@ -1,3 +1,8 @@
+input FilterBetween {
+  from: Float
+  to: Float
+}
+
 type Mutation {
   addProfile(birthday: String!, userId: String!, weight: Float!): Profile
   delProfile(_id: String!): String!
@@ -12,8 +17,11 @@ type Profile {
 }
 
 input ProfileConnectionFilter {
-  birtday: String
-  weight: Float
+  weight: ProfileWeightFilter
+}
+
+input ProfileWeightFilter {
+  between: FilterBetween
 }
 
 type Query {

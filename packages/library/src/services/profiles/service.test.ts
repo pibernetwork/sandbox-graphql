@@ -54,7 +54,14 @@ test('Service - Find all connection', async () => {
   const options: MongoDbServiceFindOptions<Profile> = {
     page: 1,
     perPage: 10,
-    filter: {},
+    filter: {
+      weight: {
+        between: {
+          from: 10,
+          to: 20
+        }
+      }
+    },
     sortBy: 'birthday',
     sortDirection: 'asc'
   };
@@ -66,7 +73,9 @@ test('Service - Find all connection', async () => {
   expect(profileRepository.findAllConnection).toBeCalledWith({
     skip: 0,
     limit: 10,
-    filter: {},
+    filter: {
+      weight: { $gt: 10, $lt: 20 }
+    },
     sortBy: 'birthday',
     sortDirection: 1
   });
