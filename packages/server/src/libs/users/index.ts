@@ -14,6 +14,7 @@ export const typeDefs = gql.default`
   type Query {
     user(_id: String!): User!
     users: [User]
+    usersOptions: [SelectOption!]!
   }
 `;
 
@@ -32,6 +33,14 @@ export const resolvers: Resolvers = {
       const usersDb = await ctx.users.findAll();
 
       return usersDb;
+    },
+    usersOptions: async (_, __, ctx) => {
+      const usersDb = await ctx.users.findAll();
+
+      return usersDb.map((userDb) => ({
+        name: userDb.email,
+        value: userDb._id.toString()
+      }));
     },
     user: async (_, args, ctx) => {
       const { _id } = args;

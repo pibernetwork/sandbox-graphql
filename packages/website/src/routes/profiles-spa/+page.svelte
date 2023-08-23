@@ -1,4 +1,5 @@
 <script lang="ts">
+  import ProfileFormAdd from '$lib/components/Profile/ProfileFormAdd.svelte';
   import ProfileView from '$lib/components/Profile/ProfileView.svelte';
   import {
     Heading,
@@ -19,21 +20,19 @@
 </script>
 
 <Heading tag="h1">Profiles SPA</Heading>
+{#if $Profiles.data}
+  <div class="grid grid-cols-12">
+    <div class="col-span-3">
+      <div>Actions</div>
 
-<div class="grid grid-cols-12">
-  <div class="col-span-3">
-    <div>Actions</div>
-    <div>{selected}</div>
-    <div>View</div>
-    <div>Create</div>
-    <div>Edit</div>
-    {#if selected}
-      <ProfileView _id={selected} />
-    {/if}
-  </div>
+      <ProfileFormAdd users={$Profiles.data.usersOptions} />
+      <div>Edit</div>
+      {#if selected}
+        <ProfileView _id={selected} />
+      {/if}
+    </div>
 
-  <div class="col-span-9">
-    {#if $Profiles.data}
+    <div class="col-span-9">
       <Table>
         <TableHead>
           <TableHeadCell>Email</TableHeadCell>
@@ -50,6 +49,6 @@
           {/each}
         </TableBody>
       </Table>
-    {/if}
+    </div>
   </div>
-</div>
+{/if}

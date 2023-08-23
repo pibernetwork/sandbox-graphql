@@ -1,4 +1,5 @@
 import { mergeResolvers, mergeTypeDefs } from '@graphql-tools/merge';
+import * as utils from '../libs/utils/index.js';
 import * as profiles from './../libs/profiles/index.js';
 import * as starts from './../libs/starts/index.js';
 import * as users from './../libs/users/index.js';
@@ -12,5 +13,6 @@ export const resolvers = mergeResolvers([
 export const typeDefs = mergeTypeDefs([
   users.typeDefs,
   starts.typeDefs,
-  profiles.typeDefs
+  profiles.typeDefs,
+  utils.typeDefs
 ]);

@@ -18,6 +18,12 @@ type Query {
   profiles: [Profile]!
   user(_id: String!): User!
   users: [User]
+  usersOptions: [SelectOption!]!
+}
+
+type SelectOption {
+  name: String!
+  value: String!
 }
 
 type User {

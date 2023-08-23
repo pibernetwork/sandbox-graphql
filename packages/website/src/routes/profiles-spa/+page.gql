@@ -8,4 +8,8 @@ query Profiles {
     birthday
     weight
   }
+  usersOptions {
+    name
+    value
+  }
 }

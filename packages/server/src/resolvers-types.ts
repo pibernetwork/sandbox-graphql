@@ -58,9 +58,10 @@ export type Query = {
   generated?: Maybe<Scalars['String']['output']>;
   hello?: Maybe<Scalars['String']['output']>;
   profile?: Maybe<Profile>;
-  profiles?: Maybe<Array<Maybe<Profile>>>;
+  profiles: Array<Maybe<Profile>>;
   user: User;
   users?: Maybe<Array<Maybe<User>>>;
+  usersOptions: Array<Maybe<SelectOption>>;
 };
 
 
@@ -71,6 +72,12 @@ export type QueryProfileArgs = {
 
 export type QueryUserArgs = {
   _id: Scalars['String']['input'];
+};
+
+export type SelectOption = {
+  __typename?: 'SelectOption';
+  name: Scalars['String']['output'];
+  value: Scalars['String']['output'];
 };
 
 export type User = {
@@ -158,6 +165,7 @@ export type ResolversTypes = ResolversObject<{
   Mutation: ResolverTypeWrapper<{}>;
   Profile: ResolverTypeWrapper<ProfileWithId>;
   Query: ResolverTypeWrapper<{}>;
+  SelectOption: ResolverTypeWrapper<SelectOption>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   User: ResolverTypeWrapper<UserWithId>;
 }>;
@@ -169,6 +177,7 @@ export type ResolversParentTypes = ResolversObject<{
   Mutation: {};
   Profile: ProfileWithId;
   Query: {};
+  SelectOption: SelectOption;
   String: Scalars['String']['output'];
   User: UserWithId;
 }>;
@@ -191,9 +200,16 @@ export type QueryResolvers<ContextType = GraphQLContext, ParentType extends Reso
   generated?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   hello?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   profile?: Resolver<Maybe<ResolversTypes['Profile']>, ParentType, ContextType, RequireFields<QueryProfileArgs, '_id'>>;
-  profiles?: Resolver<Maybe<Array<Maybe<ResolversTypes['Profile']>>>, ParentType, ContextType>;
+  profiles?: Resolver<Array<Maybe<ResolversTypes['Profile']>>, ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, '_id'>>;
   users?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
+  usersOptions?: Resolver<Array<Maybe<ResolversTypes['SelectOption']>>, ParentType, ContextType>;
+}>;
+
+export type SelectOptionResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['SelectOption'] = ResolversParentTypes['SelectOption']> = ResolversObject<{
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type UserResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
@@ -208,6 +224,7 @@ export type Resolvers<ContextType = GraphQLContext> = ResolversObject<{
   Mutation?: MutationResolvers<ContextType>;
   Profile?: ProfileResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  SelectOption?: SelectOptionResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 }>;
 

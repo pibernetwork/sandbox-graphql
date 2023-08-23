@@ -1,5 +1,6 @@
 <script lang="ts">
   import { graphql } from '$houdini';
+  import { Heading } from 'flowbite-svelte';
   import type { GetProfilesVariables } from './$houdini';
 
   export let _id: string;
@@ -23,6 +24,7 @@
   `);
 </script>
 
+<Heading tag="h2">View</Heading>
 {#if $store.errors}
   {#each $store.errors as error}
     <div>{error.message}</div>
@@ -30,7 +32,10 @@
 {/if}
 
 {#if $store.data}
-  <div>{$store.data.profile?.user?.email}</div>
-  <div>{$store.data.profile?.birthday}</div>
-  <div>{$store.data.profile?.weight}</div>
+  <div class="p-4">
+    <div>{_id}</div>
+    <div>{$store.data.profile?.user?.email}</div>
+    <div>{$store.data.profile?.birthday}</div>
+    <div>{$store.data.profile?.weight}</div>
+  </div>
 {/if}
