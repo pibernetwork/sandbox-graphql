@@ -5,6 +5,7 @@
 
   export let users: { readonly name: string; readonly value: string }[];
   export let mode: PageModes;
+  export let selected: string | null;
 
   const addProfile = graphql(`
     mutation AddProfile($userId: String!, $birthday: String!, $weight: Float!) {
@@ -31,7 +32,8 @@
       userId
     });
 
-    mode = null;
+    mode = 'view';
+    selected = response.data?.addProfile?._id || null;
   }
 </script>
 

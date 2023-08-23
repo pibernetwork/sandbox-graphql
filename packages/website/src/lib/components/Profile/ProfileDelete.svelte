@@ -1,13 +1,25 @@
 <script lang="ts">
+  import { graphql } from '$houdini';
   import type { PageModes } from '$lib';
   import { Button, Heading, P } from 'flowbite-svelte';
 
   export let _id: string;
   export let mode: PageModes;
+
+  const delProfile = graphql(`
+    mutation DelProfile($_id: String!) {
+      delProfile(_id: $_id)
+    }
+  `);
+
+  async function deleteItem() {
+    await delProfile.mutate({ _id });
+    mode = null;
+  }
 </script>
 
 <Heading tag="h2">Delete</Heading>
 <P>Are you sure about delete {_id}?</P>
 
-<Button>Yes</Button>
+<Button on:click={deleteItem}>Yes</Button>
 <Button on:click={() => (mode = 'view')}>Cancel</Button>

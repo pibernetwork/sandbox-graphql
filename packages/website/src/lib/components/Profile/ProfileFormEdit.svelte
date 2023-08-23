@@ -1,5 +1,6 @@
 <script lang="ts">
   import { graphql } from '$houdini';
+  import type { PageModes } from '$lib';
   import { Button, Heading, Input, Label, Select } from 'flowbite-svelte';
   import type { GetEditProfileVariables } from './$houdini';
   export let mode: PageModes;
@@ -17,7 +18,7 @@
   export let _id: string;
 
   export const _GetEditProfileVariables: GetEditProfileVariables = ({ props }) => {
-    return { _id: props._id };
+    return { _id: _id };
   };
 
   const store = graphql(`
@@ -52,8 +53,7 @@
       userId
     });
 
-    mode = null;
-    console.log(response);
+    mode = 'view';
   }
 </script>
 
@@ -96,6 +96,7 @@
     </div>
     <div class="mb-6">
       <Button type="submit">Edit</Button>
+      <Button on:click={() => (mode = 'view')}>Cancel</Button>
     </div>
   </form>
 {/if}

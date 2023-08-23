@@ -37,6 +37,13 @@
   let selected: string | null = null;
 
   let mode: PageModes = null;
+
+  function selectItem(_id: string | null | undefined) {
+    selected = _id || null;
+    mode = 'view';
+  }
+
+  $: selected = mode === null ? null : selected;
 </script>
 
 <Heading tag="h1">Profiles SPA</Heading>
@@ -48,20 +55,22 @@
 
       <div class="py-2">
         {#if mode === 'create'}
-          <ProfileFormAdd users={$Profiles.data.usersOptions} bind:mode />
+          <ProfileFormAdd users={$Profiles.data.usersOptions} bind:mode bind:selected />
         {/if}
-        {#if selected && mode === 'edit'}
-          <ProfileFormEdit users={$Profiles.data.usersOptions} _id={selected} bind:mode />
-        {/if}
+        {#if selected}
+          {#if mode === 'edit'}
+            <ProfileFormEdit users={$Profiles.data.usersOptions} _id={selected} bind:mode />
+          {/if}
 
-        {#if selected && mode === 'delete'}
-          <ProfileDelete _id={selected} bind:mode />
-        {/if}
-        {#if selected && mode === 'view'}
-          <ProfileView _id={selected} />
-          <Button on:click={() => (mode = 'edit')}>Edit</Button>
-          <Button on:click={() => (mode = 'delete')}>Delete</Button>
-          <Button on:click={() => (mode = null)}>Back</Button>
+          {#if mode === 'delete'}
+            <ProfileDelete _id={selected} bind:mode />
+          {/if}
+          {#if mode === 'view'}
+            <ProfileView _id={selected} />
+            <Button on:click={() => (mode = 'edit')}>Edit</Button>
+            <Button on:click={() => (mode = 'delete')}>Delete</Button>
+            <Button on:click={() => (mode = null)}>Back</Button>
+          {/if}
         {/if}
       </div>
     </div>
@@ -78,7 +87,7 @@
         </TableHead>
         <TableBody>
           {#each $Profiles.data.profiles as profile}
-            <TableBodyRow on:click={() => (selected = profile?._id || null)} class="cursor-pointer">
+            <TableBodyRow on:click={() => selectItem(profile?._id)} class="cursor-pointer">
               <TableBodyCell>{profile?.user?.email}</TableBodyCell>
               <TableBodyCell>{profile?.weight}</TableBodyCell>
               <TableBodyCell>{profile?.birthday}</TableBodyCell>
