@@ -4,7 +4,11 @@ import 'reflect-metadata';
 import { ObjectId } from 'mongodb';
 import { expect, test } from 'vitest';
 import { mock } from 'vitest-mock-extended';
-import { ProfileWithId } from '../../index.js';
+import {
+  MongoDbServiceFindOptions,
+  Profile,
+  ProfileWithId
+} from '../../index.js';
 import ProfileRepository from './repository.js';
 import ProfileService from './service.js';
 
@@ -29,6 +33,43 @@ test('Service - Find one', async () => {
   expect(findOne).toEqual(expected);
 
   expect(profileRepository.findOne).toBeCalled();
+});
+
+test('Service - Find all connection', async () => {
+  const profileRepository = mock<ProfileRepository>();
+
+  // const profileService = mock<ProfileService>();
+
+  const service = new ProfileService(profileRepository);
+
+  const expected: ProfileWithId = {
+    _id: new ObjectId('123123123123'),
+    userId: new ObjectId('123123123123'),
+    birthday: '123123123',
+    weight: 95
+  };
+
+  profileRepository.findAllConnection.mockResolvedValue([expected]);
+
+  const options: MongoDbServiceFindOptions<Profile> = {
+    page: 1,
+    perPage: 10,
+    filter: {},
+    sortBy: 'birthday',
+    sortDirection: 'asc'
+  };
+
+  const allConnections = await service.findAllConnection(options);
+
+  expect(allConnections[0]?._id.toString()).toEqual(expected._id.toString());
+
+  expect(profileRepository.findAllConnection).toBeCalledWith({
+    skip: 0,
+    limit: 10,
+    filter: {},
+    sortBy: 'birthday',
+    sortDirection: 1
+  });
 });
 
 test('Service - Insert one - OK', async () => {

@@ -1,10 +1,22 @@
 // sum.test.js
 import 'reflect-metadata';
 
-import { Collection, DeleteResult, ObjectId, UpdateResult } from 'mongodb';
+import {
+  Collection,
+  DeleteResult,
+  FindCursor,
+  ObjectId,
+  UpdateResult,
+  WithId
+} from 'mongodb';
 import { expect, test } from 'vitest';
 import { mock } from 'vitest-mock-extended';
-import { Connection, Profile, ProfileWithId } from '../../index.js';
+import {
+  Connection,
+  MongoDbRepositoryFindOptions,
+  Profile,
+  ProfileWithId
+} from '../../index.js';
 import ProfileRepository from './repository.js';
 
 test('Repository - Find one', async () => {
@@ -29,6 +41,59 @@ test('Repository - Find one', async () => {
   expect(findOne).toEqual(expected);
 
   expect(collection.findOne).toBeCalled();
+});
+
+test('Repository - Find all connection', async () => {
+  const connectionMock = mock<Connection>();
+  const collectionMock = mock<Collection>();
+
+  const expected: Profile = {
+    userId: new ObjectId('123123123123'),
+    birthday: '123123123',
+    weight: 85
+  };
+
+  const expectedWithId: WithId<Profile> = {
+    ...expected,
+    _id: new ObjectId('123123123123')
+  };
+
+  const profile = new ProfileRepository(connectionMock);
+
+  const options: MongoDbRepositoryFindOptions<Profile> = {
+    skip: 0,
+    limit: 10,
+    sortBy: 'birthday',
+    sortDirection: -1,
+    filter: {
+      birthday: { $eq: '2010-01-01' }
+    }
+  };
+
+  const cursor = mock<FindCursor<WithId<Profile>>>();
+
+  collectionMock.find.mockReturnValue(cursor);
+
+  cursor.skip.mockImplementationOnce(() => cursor);
+  cursor.limit.mockReturnThis();
+  cursor.sort.mockReturnThis();
+  cursor.toArray.mockResolvedValue([expectedWithId]);
+
+  connectionMock.getCollection.mockResolvedValue(collectionMock);
+
+  const profilesConnection = await profile.findAllConnection(options);
+
+  expect(profilesConnection[0]?._id.toString()).toEqual(
+    expectedWithId._id.toString()
+  );
+
+  expect(collectionMock.find).toBeCalledWith({
+    birthday: { $eq: '2010-01-01' }
+  });
+  expect(cursor.skip).toBeCalledWith(0);
+  expect(cursor.limit).toBeCalledWith(10);
+  expect(cursor.sort).toBeCalledWith({ birthday: -1 });
+  expect(cursor.toArray).toBeCalled();
 });
 
 test('Repository - Insert one', async () => {
