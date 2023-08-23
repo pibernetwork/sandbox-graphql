@@ -5,8 +5,8 @@
 
   export let _id: string;
 
-  export const _GetProfilesVariables: GetProfilesVariables = ({ props }) => {
-    return { _id: props._id };
+  export const _GetProfilesVariables: GetProfilesVariables = () => {
+    return { _id: _id };
   };
 
   const store = graphql(`

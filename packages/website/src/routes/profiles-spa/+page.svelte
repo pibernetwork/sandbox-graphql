@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { graphql } from '$houdini';
   import ProfileFormAdd from '$lib/components/Profile/ProfileFormAdd.svelte';
   import ProfileView from '$lib/components/Profile/ProfileView.svelte';
   import {
@@ -10,16 +11,30 @@
     TableHead,
     TableHeadCell
   } from 'flowbite-svelte';
-  import type { PageData } from './$houdini';
 
-  export let data: PageData;
-
-  $: ({ Profiles } = data);
+  const Profiles = graphql(`
+    query Profiles @load {
+      profiles {
+        _id
+        user {
+          _id
+          email
+        }
+        birthday
+        weight
+      }
+      usersOptions {
+        name
+        value
+      }
+    }
+  `);
 
   let selected: string | null = null;
 </script>
 
 <Heading tag="h1">Profiles SPA</Heading>
+
 {#if $Profiles.data}
   <div class="grid grid-cols-12">
     <div class="col-span-3">
