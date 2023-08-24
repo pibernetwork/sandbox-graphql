@@ -28,8 +28,8 @@ class ProfileRepository extends GenericRepository<Profile> {
           }
         },
         { $sort: { [sortBy]: sortDirection } },
-        { $limit: limit },
         { $skip: skip },
+        { $limit: limit },
         { $unset: 'user' }
       ])
       .toArray();

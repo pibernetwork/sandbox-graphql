@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { graphql } from '$houdini';
+  import { cache, graphql } from '$houdini';
   import type { PageModes } from '$lib';
   import { Button, Heading, P } from 'flowbite-svelte';
 
@@ -14,6 +14,8 @@
 
   async function deleteItem() {
     await delProfile.mutate({ _id });
+    // Mark all type 'UserNodes' stale
+    cache.markStale('Profile');
     mode = null;
   }
 </script>

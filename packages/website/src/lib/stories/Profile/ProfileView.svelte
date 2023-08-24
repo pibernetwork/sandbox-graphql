@@ -9,7 +9,7 @@
     return { _id: _id };
   };
 
-  const store = graphql(`
+  $: store = graphql(`
     query GetProfiles($_id: String!) @load {
       profile(_id: $_id) {
         _id
@@ -23,8 +23,6 @@
     }
   `);
 </script>
-
-<div>Store here! {JSON.stringify($store)}</div>
 
 <Heading tag="h2">View</Heading>
 {#if $store.errors}

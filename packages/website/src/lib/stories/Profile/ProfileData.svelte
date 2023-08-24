@@ -30,20 +30,6 @@
     currentPage = newPage;
   }
 
-  function changeSortOrder(newSortOrder: string) {
-    if (newSortOrder !== sortOrder) {
-      currentPage = 1;
-    }
-    sortOrder = newSortOrder;
-  }
-
-  function changeSortBy(newSortBy: string) {
-    if (newSortBy !== sortBy) {
-      currentPage = 1;
-    }
-    sortBy = newSortBy;
-  }
-
   function changeFilter(newWeightFrom: string | null, newWeightTo: string | null) {
     filters = {
       ['weight']: {
@@ -129,19 +115,6 @@
         </div>
       </div>
     {/if}
-    <div>
-      <div>
-        <div class="flex space-x-3 m-4">
-          <Button on:click={() => changeSortOrder('asc')}>Asc</Button>
-          <Button on:click={() => changeSortOrder('desc')}>Desc</Button>
-        </div>
-        <div class="flex space-x-3 m-4">
-          <Button on:click={() => changeSortBy('weight')}>Weight</Button>
-          <Button on:click={() => changeSortBy('birthday')}>Birthday</Button>
-          <Button on:click={() => changeSortBy('user.email')}>Email</Button>
-        </div>
-      </div>
-    </div>
   </div>
   <ProfileDataGrid
     {currentPage}

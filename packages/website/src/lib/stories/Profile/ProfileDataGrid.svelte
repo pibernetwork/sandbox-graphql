@@ -1,18 +1,13 @@
 <script lang="ts">
   import { graphql, type ProfileConnectionFilter } from '$houdini';
   import type { PageModes } from '$lib';
-  import {
-    Table,
-    TableBody,
-    TableBodyCell,
-    TableBodyRow,
-    TableHead,
-    TableHeadCell
-  } from 'flowbite-svelte';
+  import GridHeadCell from '$lib/components/GridHeadCell.svelte';
+  import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead } from 'flowbite-svelte';
   import type { ProfilesVariables } from './$houdini';
 
   export let selected: string | null;
   export let mode: PageModes;
+
   export let currentPage = 1;
   export let sortBy = 'weight';
   export let sortOrder = 'desc';
@@ -72,11 +67,11 @@
 </script>
 
 {#if $Profiles.data}
-  <Table>
+  <Table class="table-fixed">
     <TableHead>
-      <TableHeadCell>Email</TableHeadCell>
-      <TableHeadCell>Weight</TableHeadCell>
-      <TableHeadCell>Birthday</TableHeadCell>
+      <GridHeadCell label="Email" key="user.email" bind:sortBy bind:sortOrder bind:currentPage />
+      <GridHeadCell label="Weight" key="weight" bind:sortBy bind:sortOrder bind:currentPage />
+      <GridHeadCell label="Birthday" key="birthday" bind:sortBy bind:sortOrder bind:currentPage />
     </TableHead>
     <TableBody>
       {#each $Profiles.data.profilesConnection.nodes as profile}
