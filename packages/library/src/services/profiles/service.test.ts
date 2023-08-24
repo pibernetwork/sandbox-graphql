@@ -68,7 +68,9 @@ test('Service - Find all connection', async () => {
 
   const allConnections = await service.findAllConnection(options);
 
-  expect(allConnections[0]?._id.toString()).toEqual(expected._id.toString());
+  expect(allConnections.nodes[0]?._id.toString()).toEqual(
+    expected._id.toString()
+  );
 
   expect(profileRepository.findAllConnection).toBeCalledWith({
     skip: 0,

@@ -16,12 +16,6 @@ export const typeDefs = gql.default`
     weight: Float
   }
 
-
-  input FilterBetween {
-    from: Float
-    to: Float
-  }
-
   input ProfileWeightFilter {
     between: FilterBetween
   }
@@ -31,9 +25,15 @@ export const typeDefs = gql.default`
     weight: ProfileWeightFilter
   }
 
+  type ProfileConnection {
+    nodes: [Profile!]!
+
+    pageInfo: PageInfo!
+  }
+
   type Query {
     profiles: [Profile]!
-    profilesConnection(page: Int!, limit: Int!, sortBy: String!, sortOrder: String!, filters: ProfileConnectionFilter): [Profile]!
+    profilesConnection(page: Int!, limit: Int!, sortBy: String!, sortOrder: String!, filters: ProfileConnectionFilter): ProfileConnection!
     profile(_id: String!): Profile
   }
 
@@ -73,13 +73,19 @@ export const resolvers: Resolvers = {
       };
       const profilesDb = await ctx.profiles.findAllConnection(options);
 
-      return profilesDb.map((profile) => {
+      const { nodes, pageInfo } = profilesDb;
+
+      const newNodes = nodes.map((profile) => {
         return {
           ...profile,
           userId: profile.userId,
           _id: profile._id
         };
       });
+      return {
+        nodes: newNodes,
+        pageInfo
+      };
     },
     profiles: async (_, __, ctx) => {
       const profilesDb = await ctx.profiles.findAll();

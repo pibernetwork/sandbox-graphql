@@ -74,12 +74,25 @@ test('Query Profiles Connection', async () => {
     user: null
   };
 
-  profiles.findAllConnection.mockReturnValue(Promise.resolve([]));
+  profiles.findAllConnection.mockResolvedValue({
+    nodes: [],
+    pageInfo: {
+      page: 1,
+      nextPage: 2,
+      prevPage: null,
+      hasNextPage: true,
+      hasPrevPage: false,
+      totalNodes: 0,
+      totalPages: 1
+    }
+  });
 
   const GET_QUERY = gql.default`
     query($page: Int!, $limit: Int!, $sortBy: String!, $sortOrder: String!, $filters: ProfileConnectionFilter!) {
       profilesConnection(page: $page, limit: $limit, sortBy: $sortBy, sortOrder: $sortOrder, filters: $filters) {
-        _id
+        nodes {
+          _id
+        }
       }
     }
   `;
@@ -102,7 +115,9 @@ test('Query Profiles Connection', async () => {
 
   assert(response.body.kind === 'single');
   expect(response.body.singleResult.errors).toBeUndefined();
-  expect(response.body.singleResult.data?.['profilesConnection']).toEqual([]);
+  expect(response.body.singleResult.data?.['profilesConnection']).toEqual({
+    nodes: []
+  });
 
   expect(profiles.findAllConnection).toBeCalled();
 });

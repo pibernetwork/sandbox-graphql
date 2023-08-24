@@ -44,6 +44,12 @@ abstract class GenericRepository<T extends Document>
       .toArray();
   }
 
+  async findAllConnectionCount(filters: Filter<T> = {}) {
+    const collection = await this.getCollection(this.collectionName);
+
+    return collection.countDocuments(filters);
+  }
+
   async findAllFilter(filter: Filter<T>): Promise<WithId<T>[]> {
     const collection = await this.getCollection(this.collectionName);
 

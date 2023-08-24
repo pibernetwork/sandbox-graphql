@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { extractValidationMessages } from '../utils/validation.js';
 import {
   MongoDbRepositoryInterface,
+  MongoDbServiceConnection,
   MongoDbServiceFindOptions,
   MongoDbServiceInterface,
   MongoDbServiceReturn
@@ -28,7 +29,9 @@ abstract class Service<T extends Document>
 
   // find all
 
-  async findAllConnection(options: MongoDbServiceFindOptions<T>) {
+  async findAllConnection(
+    options: MongoDbServiceFindOptions<T>
+  ): Promise<MongoDbServiceConnection<WithId<T>>> {
     const { page, perPage, sortBy, sortDirection, filter } = options;
 
     const skip = (page - 1) * perPage;
@@ -71,7 +74,18 @@ abstract class Service<T extends Document>
       filter: queryFilter
     });
 
-    return documents;
+    return {
+      nodes: documents,
+      pageInfo: {
+        page: 1,
+        prevPage: 0,
+        nextPage: 0,
+        hasNextPage: false,
+        hasPrevPage: false,
+        totalNodes: 0,
+        totalPages: 0
+      }
+    };
   }
 
   async findAll() {

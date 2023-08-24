@@ -9,11 +9,26 @@ type Mutation {
   editProfile(_id: String!, birthday: String!, userId: String!, weight: Float!): Profile
 }
 
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPrevPage: Boolean!
+  nextPage: Int
+  page: Int!
+  prevPage: Int
+  totalNodes: Int!
+  totalPages: Int!
+}
+
 type Profile {
   _id: String
   birthday: String
   user: User
   weight: Float
+}
+
+type ProfileConnection {
+  nodes: [Profile!]!
+  pageInfo: PageInfo!
 }
 
 input ProfileConnectionFilter {
@@ -29,7 +44,7 @@ type Query {
   hello: String
   profile(_id: String!): Profile
   profiles: [Profile]!
-  profilesConnection(filters: ProfileConnectionFilter, limit: Int!, page: Int!, sortBy: String!, sortOrder: String!): [Profile]!
+  profilesConnection(filters: ProfileConnectionFilter, limit: Int!, page: Int!, sortBy: String!, sortOrder: String!): ProfileConnection!
   user(_id: String!): User!
   users: [User]
   usersOptions: [SelectOption!]!

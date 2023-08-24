@@ -7,6 +7,19 @@ export const typeDefs = gql.default`
     value: String!
   }
 
+  type PageInfo {
+    page: Int!
+    nextPage: Int
+    prevPage: Int
+    hasNextPage: Boolean!
+    hasPrevPage: Boolean!
+    totalNodes: Int!
+    totalPages: Int!
+  }
 
+  input FilterBetween {
+    from: Float
+    to: Float
+  }
 
 `;

@@ -8,6 +8,7 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -16,6 +17,11 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+};
+
+export type FilterBetween = {
+  from?: InputMaybe<Scalars['Float']['input']>;
+  to?: InputMaybe<Scalars['Float']['input']>;
 };
 
 export type Mutation = {
@@ -45,6 +51,17 @@ export type MutationEditProfileArgs = {
   weight: Scalars['Float']['input'];
 };
 
+export type PageInfo = {
+  __typename?: 'PageInfo';
+  hasNextPage: Scalars['Boolean']['output'];
+  hasPrevPage: Scalars['Boolean']['output'];
+  nextPage?: Maybe<Scalars['Int']['output']>;
+  page: Scalars['Int']['output'];
+  prevPage?: Maybe<Scalars['Int']['output']>;
+  totalNodes: Scalars['Int']['output'];
+  totalPages: Scalars['Int']['output'];
+};
+
 export type Profile = {
   __typename?: 'Profile';
   _id?: Maybe<Scalars['String']['output']>;
@@ -53,9 +70,18 @@ export type Profile = {
   weight?: Maybe<Scalars['Float']['output']>;
 };
 
+export type ProfileConnection = {
+  __typename?: 'ProfileConnection';
+  nodes: Array<Profile>;
+  pageInfo: PageInfo;
+};
+
 export type ProfileConnectionFilter = {
-  birtday?: InputMaybe<Scalars['String']['input']>;
-  weight?: InputMaybe<Scalars['Float']['input']>;
+  weight?: InputMaybe<ProfileWeightFilter>;
+};
+
+export type ProfileWeightFilter = {
+  between?: InputMaybe<FilterBetween>;
 };
 
 export type Query = {
@@ -64,7 +90,7 @@ export type Query = {
   hello?: Maybe<Scalars['String']['output']>;
   profile?: Maybe<Profile>;
   profiles: Array<Maybe<Profile>>;
-  profilesConnection: Array<Maybe<Profile>>;
+  profilesConnection: ProfileConnection;
   user: User;
   users?: Maybe<Array<Maybe<User>>>;
   usersOptions: Array<SelectOption>;
@@ -176,11 +202,15 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  FilterBetween: FilterBetween;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
+  PageInfo: ResolverTypeWrapper<PageInfo>;
   Profile: ResolverTypeWrapper<ProfileWithId>;
+  ProfileConnection: ResolverTypeWrapper<Omit<ProfileConnection, 'nodes'> & { nodes: Array<ResolversTypes['Profile']> }>;
   ProfileConnectionFilter: ProfileConnectionFilter;
+  ProfileWeightFilter: ProfileWeightFilter;
   Query: ResolverTypeWrapper<{}>;
   SelectOption: ResolverTypeWrapper<SelectOption>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
@@ -190,11 +220,15 @@ export type ResolversTypes = ResolversObject<{
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars['Boolean']['output'];
+  FilterBetween: FilterBetween;
   Float: Scalars['Float']['output'];
   Int: Scalars['Int']['output'];
   Mutation: {};
+  PageInfo: PageInfo;
   Profile: ProfileWithId;
+  ProfileConnection: Omit<ProfileConnection, 'nodes'> & { nodes: Array<ResolversParentTypes['Profile']> };
   ProfileConnectionFilter: ProfileConnectionFilter;
+  ProfileWeightFilter: ProfileWeightFilter;
   Query: {};
   SelectOption: SelectOption;
   String: Scalars['String']['output'];
@@ -207,6 +241,17 @@ export type MutationResolvers<ContextType = GraphQLContext, ParentType extends R
   editProfile?: Resolver<Maybe<ResolversTypes['Profile']>, ParentType, ContextType, RequireFields<MutationEditProfileArgs, '_id' | 'birthday' | 'userId' | 'weight'>>;
 }>;
 
+export type PageInfoResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['PageInfo'] = ResolversParentTypes['PageInfo']> = ResolversObject<{
+  hasNextPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  hasPrevPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  nextPage?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  page?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  prevPage?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  totalNodes?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalPages?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type ProfileResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Profile'] = ResolversParentTypes['Profile']> = ResolversObject<{
   _id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   birthday?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -215,12 +260,18 @@ export type ProfileResolvers<ContextType = GraphQLContext, ParentType extends Re
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type ProfileConnectionResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['ProfileConnection'] = ResolversParentTypes['ProfileConnection']> = ResolversObject<{
+  nodes?: Resolver<Array<ResolversTypes['Profile']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type QueryResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   generated?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   hello?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   profile?: Resolver<Maybe<ResolversTypes['Profile']>, ParentType, ContextType, RequireFields<QueryProfileArgs, '_id'>>;
   profiles?: Resolver<Array<Maybe<ResolversTypes['Profile']>>, ParentType, ContextType>;
-  profilesConnection?: Resolver<Array<Maybe<ResolversTypes['Profile']>>, ParentType, ContextType, RequireFields<QueryProfilesConnectionArgs, 'limit' | 'page' | 'sortBy' | 'sortOrder'>>;
+  profilesConnection?: Resolver<ResolversTypes['ProfileConnection'], ParentType, ContextType, RequireFields<QueryProfilesConnectionArgs, 'limit' | 'page' | 'sortBy' | 'sortOrder'>>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, '_id'>>;
   users?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
   usersOptions?: Resolver<Array<ResolversTypes['SelectOption']>, ParentType, ContextType>;
@@ -242,7 +293,9 @@ export type UserResolvers<ContextType = GraphQLContext, ParentType extends Resol
 
 export type Resolvers<ContextType = GraphQLContext> = ResolversObject<{
   Mutation?: MutationResolvers<ContextType>;
+  PageInfo?: PageInfoResolvers<ContextType>;
   Profile?: ProfileResolvers<ContextType>;
+  ProfileConnection?: ProfileConnectionResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   SelectOption?: SelectOptionResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
