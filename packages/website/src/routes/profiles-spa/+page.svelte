@@ -1,9 +1,9 @@
 <script lang="ts">
   import { graphql } from '$houdini';
   import type { PageModes } from '$lib';
+  import ProfileTable from '$lib/components/Profile/ProfileData.svelte';
   import ProfileDelete from '$lib/components/Profile/ProfileDelete.svelte';
   import ProfileForm from '$lib/components/Profile/ProfileForm.svelte';
-  import ProfileTable from '$lib/components/Profile/ProfileTable.svelte';
   import ProfileView from '$lib/components/Profile/ProfileView.svelte';
   import { Button, Heading } from 'flowbite-svelte';
 
@@ -35,19 +35,10 @@
       <Button on:click={createItem}>Create</Button>
 
       <div class="py-2">
-        {#if mode === 'create'}
+        {#if mode === 'create' || (selected && mode === 'edit')}
           <ProfileForm users={$Options.data.usersOptions} _id={selected} bind:mode bind:selected />
         {/if}
         {#if selected}
-          {#if mode === 'edit'}
-            <ProfileForm
-              users={$Options.data.usersOptions}
-              _id={selected}
-              bind:mode
-              bind:selected
-            />
-          {/if}
-
           {#if mode === 'delete'}
             <ProfileDelete _id={selected} bind:mode />
           {/if}
