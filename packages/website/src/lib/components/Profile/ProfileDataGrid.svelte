@@ -24,14 +24,25 @@
         sortBy: $sortBy
         sortOrder: $sortOrder
         filters: $filters
-      ) @list(name: "Profiles_Items") {
-        _id
-        user {
+      ) {
+        nodes @list(name: "Profiles_Items") {
           _id
-          email
+          user {
+            _id
+            email
+          }
+          birthday
+          weight
         }
-        birthday
-        weight
+        pageInfo {
+          page
+          nextPage
+          prevPage
+          hasNextPage
+          hasPrevPage
+          totalNodes
+          totalPages
+        }
       }
     }
   `);
@@ -39,6 +50,9 @@
 
   export let mode: PageModes;
   export let currentPage = 1;
+  export let sortBy = 'weight';
+  export let sortOrder = 'desc';
+
   function selectItem(_id: string | null | undefined) {
     selected = _id || null;
     mode = 'view';
@@ -48,8 +62,8 @@
     return {
       page: currentPage,
       limit: 10,
-      sortBy: 'weight',
-      sortOrder: 'desc',
+      sortBy,
+      sortOrder,
       filters: { ['weight']: { between: { from: 50, to: 100 } } }
     };
   };
@@ -63,7 +77,7 @@
       <TableHeadCell>Birthday</TableHeadCell>
     </TableHead>
     <TableBody>
-      {#each $Profiles.data.profilesConnection as profile}
+      {#each $Profiles.data.profilesConnection.nodes as profile}
         <TableBodyRow on:click={() => selectItem(profile?._id)} class="cursor-pointer">
           <TableBodyCell>{profile?.user?.email}</TableBodyCell>
           <TableBodyCell>{profile?.weight}</TableBodyCell>

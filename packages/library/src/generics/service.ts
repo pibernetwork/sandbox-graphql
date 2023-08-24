@@ -74,16 +74,24 @@ abstract class Service<T extends Document>
       filter: queryFilter
     });
 
+    const totalNodes =
+      await this._repository.findAllConnectionCount(queryFilter);
+
+    const totalPages = Math.ceil(totalNodes / perPage);
+
+    const hasNextPage = page < totalPages;
+
+    const hasPrevPage = page > 1 && totalNodes > 0;
     return {
       nodes: documents,
       pageInfo: {
-        page: 1,
-        prevPage: 0,
-        nextPage: 0,
-        hasNextPage: false,
-        hasPrevPage: false,
-        totalNodes: 0,
-        totalPages: 0
+        page,
+        prevPage: hasPrevPage ? page - 1 : null,
+        nextPage: hasNextPage ? page + 1 : null,
+        hasNextPage,
+        hasPrevPage,
+        totalNodes: totalNodes,
+        totalPages: totalPages
       }
     };
   }

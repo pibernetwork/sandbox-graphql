@@ -49,7 +49,11 @@ test('Service - Find all connection', async () => {
     weight: 95
   };
 
-  profileRepository.findAllConnection.mockResolvedValue([expected]);
+  profileRepository.findAllConnection.mockResolvedValue(
+    Array(10).fill(expected)
+  );
+
+  profileRepository.findAllConnectionCount.mockResolvedValue(450);
 
   const options: MongoDbServiceFindOptions<Profile> = {
     page: 1,
@@ -68,9 +72,17 @@ test('Service - Find all connection', async () => {
 
   const allConnections = await service.findAllConnection(options);
 
-  expect(allConnections.nodes[0]?._id.toString()).toEqual(
-    expected._id.toString()
-  );
+  const { nodes, pageInfo } = allConnections;
+
+  expect(nodes[0]?._id.toString()).toEqual(expected._id.toString());
+
+  expect(pageInfo.page).toEqual(1);
+  expect(pageInfo.hasNextPage).toEqual(true);
+  expect(pageInfo.nextPage).toEqual(2);
+  expect(pageInfo.hasPrevPage).toEqual(false);
+  expect(pageInfo.prevPage).toEqual(null);
+  expect(pageInfo.totalNodes).toEqual(450);
+  expect(pageInfo.totalPages).toEqual(45);
 
   expect(profileRepository.findAllConnection).toBeCalledWith({
     skip: 0,
@@ -80,6 +92,10 @@ test('Service - Find all connection', async () => {
     },
     sortBy: 'birthday',
     sortDirection: 1
+  });
+
+  expect(profileRepository.findAllConnectionCount).toBeCalledWith({
+    weight: { $gt: 10, $lt: 20 }
   });
 });
 
