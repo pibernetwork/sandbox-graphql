@@ -1,5 +1,4 @@
 // sum.test.js
-import 'reflect-metadata';
 
 import {
   AggregationCursor,

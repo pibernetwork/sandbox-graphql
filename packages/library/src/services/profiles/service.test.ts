@@ -1,6 +1,3 @@
-// sum.test.js
-import 'reflect-metadata';
-
 import { ObjectId } from 'mongodb';
 import { expect, test } from 'vitest';
 import { mock } from 'vitest-mock-extended';
