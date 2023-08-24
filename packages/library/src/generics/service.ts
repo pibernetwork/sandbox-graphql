@@ -54,9 +54,15 @@ abstract class Service<T extends Document>
 
         const { to, from } = between;
 
+        if (!to && !from) {
+          /** @TODO clean this continue when implement new type */
+          continue;
+        }
+
         const name = fieldName as keyof Filter<T>;
         queryFilter[name] = {};
 
+        console.log(to, from);
         if (from) {
           queryFilter[name].$gt = from;
         }

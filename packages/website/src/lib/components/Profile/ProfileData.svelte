@@ -1,12 +1,16 @@
 <script lang="ts">
-  import type { ProfilesStore } from '$houdini';
+  import type { ProfileConnectionFilter, ProfilesStore } from '$houdini';
   import type { PageModes } from '$lib';
-  import { Button, PaginationItem } from 'flowbite-svelte';
+  import { Button, Input, Label, PaginationItem } from 'flowbite-svelte';
   import ProfileDataGrid from './ProfileDataGrid.svelte';
 
   let currentPage = 1;
   let sortBy = 'weight';
   let sortOrder = 'desc';
+
+  let filters: ProfileConnectionFilter = {
+    ['weight']: { between: { from: null, to: null } }
+  };
 
   export let selected: string | null;
 
@@ -17,6 +21,7 @@
   let Profiles: ProfilesStore;
 
   $: pageInfo = $Profiles?.data?.profilesConnection.pageInfo;
+  $: errors = $Profiles?.errors;
 
   function changePage(newPage: number | null | undefined) {
     if (newPage === null || newPage === undefined) {
@@ -38,9 +43,37 @@
     }
     sortBy = newSortBy;
   }
+
+  function changeFilter(newWeightFrom: string | null, newWeightTo: string | null) {
+    filters = {
+      ['weight']: {
+        between: {
+          from: (newWeightFrom && parseFloat(newWeightFrom)) || null,
+          to: (newWeightTo && parseFloat(newWeightTo)) || null
+        }
+      }
+    };
+
+    currentPage = 1;
+  }
+
+  function submitFilter(e: SubmitEvent) {
+    e.preventDefault();
+
+    const formData = new FormData(e.target as HTMLFormElement);
+
+    const newWeightFrom = formData.get('weightFrom')?.toString() || null;
+
+    const newWeightTo = formData.get('weightTo')?.toString() || null;
+
+    changeFilter(newWeightFrom, newWeightTo);
+  }
 </script>
 
 <div class="col-span-9">
+  {#if errors}
+    {JSON.stringify(errors)}
+  {/if}
   <div class="grid grid-cols-2">
     {#if pageInfo !== undefined}
       <div>
@@ -55,6 +88,38 @@
         <div>
           Page {pageInfo.page} of {pageInfo.totalPages} - {pageInfo.totalNodes}
         </div>
+        <div>
+          <form on:submit={submitFilter} class="p-4">
+            <div class="grid grid-cols-2 gap-4 mb-4">
+              <div>
+                <Label for="birthday">From</Label>
+                <Input
+                  id="weightFrom"
+                  name="weightFrom"
+                  placeholder="Weight From"
+                  type="number"
+                  step="0.1"
+                  min="0"
+                />
+              </div>
+              <div>
+                <Label for="weight">To</Label>
+                <Input
+                  id="weightTo"
+                  name="weightTo"
+                  placeholder="Weight To"
+                  type="number"
+                  step="0.1"
+                  min="0"
+                />
+              </div>
+            </div>
+
+            <div>
+              <Button type="submit">Filter</Button>
+            </div>
+          </form>
+        </div>
       </div>
     {/if}
     <div>
@@ -68,8 +133,15 @@
           <Button on:click={() => changeSortBy('birthday')}>Birthday</Button>
         </div>
       </div>
-      <div>Filter</div>
     </div>
   </div>
-  <ProfileDataGrid {currentPage} {sortBy} {sortOrder} bind:selected bind:mode bind:Profiles />
+  <ProfileDataGrid
+    {currentPage}
+    {filters}
+    {sortBy}
+    {sortOrder}
+    bind:selected
+    bind:mode
+    bind:Profiles
+  />
 </div>

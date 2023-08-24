@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { graphql } from '$houdini';
+  import { graphql, type ProfileConnectionFilter } from '$houdini';
   import type { PageModes } from '$lib';
   import {
     Table,
@@ -10,6 +10,14 @@
     TableHeadCell
   } from 'flowbite-svelte';
   import type { ProfilesVariables } from './$houdini';
+
+  export let selected: string | null;
+  export let mode: PageModes;
+  export let currentPage = 1;
+  export let sortBy = 'weight';
+  export let sortOrder = 'desc';
+  export let filters: ProfileConnectionFilter;
+
   export let Profiles = graphql(`
     query Profiles(
       $page: Int!
@@ -46,12 +54,6 @@
       }
     }
   `);
-  export let selected: string | null;
-
-  export let mode: PageModes;
-  export let currentPage = 1;
-  export let sortBy = 'weight';
-  export let sortOrder = 'desc';
 
   function selectItem(_id: string | null | undefined) {
     selected = _id || null;
@@ -64,7 +66,7 @@
       limit: 10,
       sortBy,
       sortOrder,
-      filters: { ['weight']: { between: { from: 50, to: 100 } } }
+      filters
     };
   };
 </script>
