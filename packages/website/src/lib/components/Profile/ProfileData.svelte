@@ -68,6 +68,13 @@
 
     changeFilter(newWeightFrom, newWeightTo);
   }
+
+  let form: HTMLFormElement;
+
+  function resetForm() {
+    form.reset();
+    changeFilter(null, null);
+  }
 </script>
 
 <div class="col-span-9">
@@ -89,7 +96,7 @@
           Page {pageInfo.page} of {pageInfo.totalPages} - {pageInfo.totalNodes}
         </div>
         <div>
-          <form on:submit={submitFilter} class="p-4">
+          <form bind:this={form} on:submit={submitFilter} class="p-4">
             <div class="grid grid-cols-2 gap-4 mb-4">
               <div>
                 <Label for="birthday">From</Label>
@@ -114,9 +121,9 @@
                 />
               </div>
             </div>
-
             <div>
               <Button type="submit">Filter</Button>
+              <Button on:click={resetForm}>Reset</Button>
             </div>
           </form>
         </div>
