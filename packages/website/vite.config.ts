@@ -5,6 +5,7 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   plugins: [houdini(), sveltekit()],
   test: {
-    environment: 'happy-dom'
+    environment: 'happy-dom',
+    globals: true
   }
 });
