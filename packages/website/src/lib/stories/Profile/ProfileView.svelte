@@ -9,7 +9,6 @@
     return { _id: _id };
   };
 
-  console.log(graphql);
   const store = graphql(`
     query GetProfiles($_id: String!) @load {
       profile(_id: $_id) {

@@ -3,9 +3,5 @@ import houdini from 'houdini/vite';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  plugins: [houdini(), sveltekit()],
-  test: {
-    environment: 'happy-dom',
-    globals: true
-  }
+  plugins: [houdini(), sveltekit()]
 });
