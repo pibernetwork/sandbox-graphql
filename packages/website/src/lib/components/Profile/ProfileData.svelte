@@ -138,6 +138,7 @@
         <div class="flex space-x-3 m-4">
           <Button on:click={() => changeSortBy('weight')}>Weight</Button>
           <Button on:click={() => changeSortBy('birthday')}>Birthday</Button>
+          <Button on:click={() => changeSortBy('user.email')}>Email</Button>
         </div>
       </div>
     </div>

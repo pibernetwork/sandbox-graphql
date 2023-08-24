@@ -28,7 +28,6 @@ abstract class GenericRepository<T extends Document>
   }
 
   // find
-
   async findAllConnection(
     options: MongoDbRepositoryFindOptions<T>
   ): Promise<WithId<T>[]> {

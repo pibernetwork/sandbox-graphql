@@ -86,6 +86,7 @@ export interface MongoDbRepositoryInterface<T extends Document> {
   findAllConnection(
     options: MongoDbRepositoryFindOptions<T>
   ): Promise<WithId<T>[]>;
+
   findAllConnectionCount(filters: Filter<T>): Promise<number>;
   findAllByIds(ids: readonly ObjectId[]): Promise<WithId<T>[]>;
   findAllFilter(filter: Filter<T>): Promise<WithId<T>[]>;

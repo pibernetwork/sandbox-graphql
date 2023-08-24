@@ -62,7 +62,6 @@ abstract class Service<T extends Document>
         const name = fieldName as keyof Filter<T>;
         queryFilter[name] = {};
 
-        console.log(to, from);
         if (from) {
           queryFilter[name].$gt = from;
         }

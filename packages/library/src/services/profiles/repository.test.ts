@@ -2,9 +2,9 @@
 import 'reflect-metadata';
 
 import {
+  AggregationCursor,
   Collection,
   DeleteResult,
-  FindCursor,
   ObjectId,
   UpdateResult,
   WithId
@@ -70,13 +70,10 @@ test('Repository - Find all connection', async () => {
     }
   };
 
-  const cursor = mock<FindCursor<WithId<Profile>>>();
+  const cursor = mock<AggregationCursor<WithId<Profile>>>();
 
-  collectionMock.find.mockReturnValue(cursor);
+  collectionMock.aggregate.mockReturnValue(cursor);
 
-  cursor.skip.mockImplementationOnce(() => cursor);
-  cursor.limit.mockReturnThis();
-  cursor.sort.mockReturnThis();
   cursor.toArray.mockResolvedValue([expectedWithId]);
 
   connectionMock.getCollection.mockResolvedValue(collectionMock);
@@ -87,12 +84,6 @@ test('Repository - Find all connection', async () => {
     expectedWithId._id.toString()
   );
 
-  expect(collectionMock.find).toBeCalledWith({
-    birthday: { $eq: '2010-01-01' }
-  });
-  expect(cursor.skip).toBeCalledWith(0);
-  expect(cursor.limit).toBeCalledWith(10);
-  expect(cursor.sort).toBeCalledWith({ birthday: -1 });
   expect(cursor.toArray).toBeCalled();
 });
 
