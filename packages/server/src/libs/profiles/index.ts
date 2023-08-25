@@ -99,7 +99,6 @@ export const resolvers: Resolvers = {
       });
     },
     profile: async (_, args, ctx) => {
-      console.log('here');
       const { _id } = args;
 
       const profileDb = await ctx.profiles.findOne(_id);

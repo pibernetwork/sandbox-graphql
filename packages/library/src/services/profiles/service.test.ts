@@ -80,6 +80,8 @@ test('Service - Find all connection', async () => {
   expect(pageInfo.prevPage).toEqual(null);
   expect(pageInfo.totalNodes).toEqual(450);
   expect(pageInfo.totalPages).toEqual(45);
+  expect(pageInfo.start).toEqual(1);
+  expect(pageInfo.end).toEqual(10);
 
   expect(profileRepository.findAllConnection).toBeCalledWith({
     skip: 0,

@@ -13,6 +13,8 @@ export type MongoDbServiceReturn<T> = { node: WithId<T> | null } & {
 
 export interface MongoDbServiceConnectionPageInfo {
   page: number;
+  start: number;
+  end: number;
   nextPage: number | null;
   prevPage: number | null;
   hasNextPage: boolean;

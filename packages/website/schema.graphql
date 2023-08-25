@@ -10,11 +10,13 @@ type Mutation {
 }
 
 type PageInfo {
+  end: Int!
   hasNextPage: Boolean!
   hasPrevPage: Boolean!
   nextPage: Int
   page: Int!
   prevPage: Int
+  start: Int!
   totalNodes: Int!
   totalPages: Int!
 }

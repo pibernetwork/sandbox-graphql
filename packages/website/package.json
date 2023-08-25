@@ -21,6 +21,7 @@
     "happy-dom": "^10.11.0",
     "houdini": "^1.2.8",
     "houdini-svelte": "^1.2.8",
+    "jsdom": "^22.1.0",
     "postcss": "^8.4.27",
     "prettier": "^2.8.0",
     "prettier-plugin-svelte": "^2.10.1",

@@ -96,7 +96,9 @@ abstract class Service<T extends Document>
         hasNextPage,
         hasPrevPage,
         totalNodes: totalNodes,
-        totalPages: totalPages
+        totalPages: totalPages,
+        start: hasPrevPage ? (page - 1) * perPage + 1 : 1,
+        end: hasNextPage ? page * perPage : totalNodes
       }
     };
   }

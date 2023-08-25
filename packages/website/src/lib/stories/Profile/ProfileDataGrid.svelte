@@ -45,6 +45,8 @@
           hasPrevPage
           totalNodes
           totalPages
+          start
+          end
         }
       }
     }

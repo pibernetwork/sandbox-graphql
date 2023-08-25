@@ -15,6 +15,8 @@ export const typeDefs = gql.default`
     hasPrevPage: Boolean!
     totalNodes: Int!
     totalPages: Int!
+    start: Int!
+    end: Int!
   }
 
   input FilterBetween {
