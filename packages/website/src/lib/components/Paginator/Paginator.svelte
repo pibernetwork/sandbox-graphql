@@ -17,35 +17,30 @@
 
   export let changePage: (page: number | null) => void;
 
-  //before
-  const beforeItems = Array.from(Array(5), (_, index) => index + 1).reverse();
-  const afterItems = Array.from(Array(5), (_, index) => index + 1);
+  $: items = [
+    ...Array.from(Array(5), (_, index) => index + 1)
+      .reverse()
+      .filter((item) => page - item > 0)
+      .map((item) => page - item),
+    page,
+    ...Array.from(Array(5), (_, index) => index + 1)
+      .filter((item) => page + item <= totalPages)
+      .map((item) => page + item)
+  ];
 
   //after
 </script>
 
 <div>Showing {start} to {end} of {totalNodes} entries</div>
 <div>Page {page} of {totalPages}</div>
-<div class="flex space-x-3 justify-center">
+<div class="flex space-x-3 justify-start border-2">
   {#if hasPrevPage}
     <PaginationItem on:click={() => changePage(prevPage)}>
       <AngleLeft />
     </PaginationItem>
   {/if}
-  {#each beforeItems as beforePage}
-    {#if page - beforePage > 0}
-      <PaginationItem on:click={() => changePage(page - beforePage)}
-        >{page - beforePage}</PaginationItem
-      >
-    {/if}
-  {/each}
-  <PaginationItem on:click={() => changePage(page)} active>{page}</PaginationItem>
-  {#each afterItems as afterPage}
-    {#if page + afterPage <= totalPages}
-      <PaginationItem on:click={() => changePage(page + afterPage)}
-        >{page + afterPage}</PaginationItem
-      >
-    {/if}
+  {#each items as item}
+    <PaginationItem on:click={() => changePage(item)}>{item}</PaginationItem>
   {/each}
   {#if hasNextPage}
     <PaginationItem on:click={() => changePage(nextPage)}>
