@@ -1,7 +1,7 @@
 <script lang="ts">
   import { graphql } from '$houdini';
   import type { PageModes } from '$lib';
-  import ProfileTable from '$lib/stories/Profile/ProfileData.svelte';
+  import ProfileTable from '$lib/stories/Profile/Profile.svelte';
   import ProfileDelete from '$lib/stories/Profile/ProfileDelete.svelte';
   import ProfileForm from '$lib/stories/Profile/ProfileForm.svelte';
   import ProfileView from '$lib/stories/Profile/ProfileView.svelte';

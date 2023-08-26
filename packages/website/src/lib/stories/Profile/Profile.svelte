@@ -2,8 +2,8 @@
   import type { ProfileConnectionFilter, ProfilesStore } from '$houdini';
   import type { PageModes } from '$lib';
   import Paginator from '$lib/components/Paginator/Paginator.svelte';
-  import ProfileDataFilter from '$lib/components/Profile/ProfileDataFilter.svelte';
-  import ProfileDataGrid from './ProfileDataGrid.svelte';
+  import ProfileDataFilter from '$lib/stories/Profile/ProfileDataFilters.svelte';
+  import ProfileDataGrid from '$lib/stories/Profile/ProfileDataGrid.svelte';
 
   // init page info
   let currentPage = 1;
@@ -22,7 +22,6 @@
   // init store
   let Profiles: ProfilesStore;
   $: pageInfo = $Profiles?.data?.profilesConnection.pageInfo;
-  $: errors = $Profiles?.errors;
 </script>
 
 <div class="col-span-9">
@@ -40,7 +39,7 @@
       prevPage={pageInfo.prevPage}
     />
   {/if}
-  <ProfileDataFilter {changeFilter} {currentPage} bind:filter />
+  <ProfileDataFilter {currentPage} bind:filters />
   <ProfileDataGrid
     {currentPage}
     {filters}
