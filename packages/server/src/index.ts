@@ -7,6 +7,8 @@ import dotenv from 'dotenv';
 import express from 'express';
 
 import http from 'http';
+import DataServices from 'library/src/containers/dataServices.js';
+import { container } from 'library/src/containers/inversify.config.js';
 import 'reflect-metadata';
 import { resolvers, typeDefs } from './graphql/index.js';
 import { GraphQLContext } from './graphql/types.js';
@@ -28,9 +30,6 @@ const server = new ApolloServer({
 });
 
 await server.start();
-
-import DataServices from 'library/src/containers/dataServices.js';
-import { container } from 'library/src/containers/inversify.config.js';
 
 const dataServices = new DataServices(container);
 
