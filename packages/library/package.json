@@ -22,7 +22,7 @@
   },
   "keywords": [],
   "license": "ISC",
-  "main": "src/index.ts",
+  "main": "src/index",
   "name": "library",
   "scripts": {
     "check": "tsc --noEmit",

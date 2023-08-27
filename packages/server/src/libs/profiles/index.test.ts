@@ -83,7 +83,9 @@ test('Query Profiles Connection', async () => {
       hasNextPage: true,
       hasPrevPage: false,
       totalNodes: 0,
-      totalPages: 1
+      totalPages: 1,
+      start: 1,
+      end: 2
     }
   });
 
