@@ -29,8 +29,8 @@ const server = new ApolloServer({
 
 await server.start();
 
-import { container } from 'library';
 import DataServices from 'library/src/containers/dataServices.js';
+import { container } from 'library/src/containers/inversify.config.js';
 
 const dataServices = new DataServices(container);
 
