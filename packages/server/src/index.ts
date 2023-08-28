@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
@@ -5,11 +7,9 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
-
 import http from 'http';
 import DataServices from 'library/src/containers/dataServices.js';
 import { container } from 'library/src/containers/inversify.config.js';
-import 'reflect-metadata';
 import { resolvers, typeDefs } from './graphql/index.js';
 import { GraphQLContext } from './graphql/types.js';
 
