@@ -1,4 +1,4 @@
-# Sandbox 2
+# Sandbox Graphql
 
 Sandbox to test oportunities on improve GraphqQL development
 
