@@ -3,7 +3,7 @@ import {
   MongoDbServiceFindOptions,
   ObjectId,
   Profile
-} from 'library/src/index.js';
+} from 'library';
 import { Resolvers } from '../../resolvers-types.js';
 
 import gql from 'graphql-tag';

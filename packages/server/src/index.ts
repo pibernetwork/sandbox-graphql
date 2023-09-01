@@ -8,8 +8,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
 import http from 'http';
-import DataServices from 'library/src/containers/dataServices.js';
-import { container } from 'library/src/containers/inversify.config.js';
+import { container, DataServices } from 'library';
+
 import { resolvers, typeDefs } from './graphql/index.js';
 import { GraphQLContext } from './graphql/types.js';
 

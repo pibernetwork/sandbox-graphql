@@ -4,8 +4,8 @@ import 'reflect-metadata';
 import { ApolloServer } from '@apollo/server';
 import gql from 'graphql-tag';
 import { Connection, ObjectId, ProfileWithId, UserWithId } from 'library';
-import ProfileService from 'library/src/services/profiles/service.js';
-import UserService from 'library/src/services/users/service.js';
+
+import { ProfileService, UserService } from 'library';
 import { assert, expect, test } from 'vitest';
 import { mock } from 'vitest-mock-extended';
 import { Profile } from '../../resolvers-types.js';

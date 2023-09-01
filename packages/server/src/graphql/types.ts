@@ -1,4 +1,4 @@
-import DataServices from 'library/src/containers/dataServices.js';
+import { DataServices } from 'library';
 import { User } from '../resolvers-types.js';
 
 type GraphQLServices = ReturnType<DataServices['getAll']>;
